@@ -76,54 +76,8 @@ public class CamService extends Service implements ConnectCheckerRtsp {
         rect= new Rect();
         disp.getRectSize(rect);
 
-/*
-        SurfaceView sv = new SurfaceView(this);
-
-        WindowManager.LayoutParams params = new WindowManager.LayoutParams(1, 1,
-                WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-                PixelFormat.TRANSLUCENT);
-
-        SurfaceHolder sh = sv.getHolder();
-
-        sv.setZOrderOnTop(true);
-        sh.setFormat(PixelFormat.TRANSPARENT);
-*/
-
         startCamera(rect.width(), rect.height());
 
-
-/*
-        SensorManager sensorManager = (SensorManager) this.getSystemService(Context.SENSOR_SERVICE);
-        sensorManager.registerListener(new SensorEventListener() {
-            int orientation=-1;;
-
-            @Override
-            public void onSensorChanged(SensorEvent event) {
-                if (event.values[1]<6.5 && event.values[1]>-6.5) {
-                    if (orientation!=1) {
-                        rtspServerCamera1.stopPreview();
-                        startCamera(rect.height(), rect.width());
-                        Log.d("Sensor", "Landscape");
-                    }
-                    orientation=1;
-                } else {
-                    if (orientation!=0) {
-                        rtspServerCamera1.stopPreview();
-                        startCamera(rect.width(), rect.height());
-                        Log.d("Sensor", "Portrait");
-                    }
-                    orientation=0;
-                }
-            }
-
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {
-                // TODO Auto-generated method stub
-
-            }
-        }, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
-*/
     }
 
     private void startCamera(int width, int height){
