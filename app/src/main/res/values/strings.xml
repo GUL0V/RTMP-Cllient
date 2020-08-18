@@ -1,3 +1,21 @@
 <resources>
 	<string name="app_name">WebCamCloud</string>
+	<string name="cam">Main</string>
+	<string name="cam_title">Camera:</string>
+	<string name="settings">Settings</string>
+	<string name="connected">Wi-Fi network</string>
+	<string name="disconnected">Wi-Fi disconnected</string>
+	<string name="ip_title">Wi-Fi IP: %s</string>
+	<string name="ip_none">NONE</string>
+	<string name="port">Port: %d</string>
+	<string name="rtsp">RTSP</string>
+	<string name="rtsp_discon">Enable Wi-Fi in mobile phone settings</string>
+	<string name="video_resolution">Video resolution</string>
+	<string name="frame_rate">Frame rate</string>
+	<string name="login">Login</string>
+	<string name="password">Password</string>
+	<string name="lang">English</string>
+	<string name="compress">h24 compression</string>
+	<string name="on">On</string>
+	<string name="off">Off</string>
 </resources>

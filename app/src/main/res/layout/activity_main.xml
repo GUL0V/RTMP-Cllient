@@ -8,9 +8,70 @@
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:orientation="horizontal"
 		app:layout_constraintTop_toTopOf="parent"
 		android:id="@+id/layoutTop"
-		/>
+		android:layout_marginTop="24dp"
+		>
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:layout_marginLeft="24dp"
+			>
+			<ImageView
+				android:layout_width="wrap_content"
+				android:layout_height="32dp"
+				android:src="@drawable/selector_cam"
+				android:adjustViewBounds="true"
+				android:duplicateParentState="true"
+				android:layout_gravity="center"
+				/>
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/cam"
+				android:duplicateParentState="true"
+				android:textColor="@color/selector_tab_text"
+				/>
+		</LinearLayout>
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:layout_marginLeft="24dp"
+			>
+			<ImageView
+				android:layout_width="wrap_content"
+				android:layout_height="32dp"
+				android:src="@drawable/selector_settings"
+				android:adjustViewBounds="true"
+				android:duplicateParentState="true"
+				android:layout_gravity="center"
+				/>
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/settings"
+				android:duplicateParentState="true"
+				android:textColor="@color/selector_tab_text"
+				/>
+		</LinearLayout>
+		<Space
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			/>
+		<Switch
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/switchCamera"
+			android:switchMinWidth="120dp"
+			android:layout_gravity="center_vertical"
+			android:layout_marginRight="24dp"
+			/>
+
+	</LinearLayout>
 	<fragment
 		android:id="@+id/nav_host_fragment"
 		android:name="androidx.navigation.fragment.NavHostFragment"
@@ -22,6 +83,7 @@
 		app:layout_constraintRight_toRightOf="parent"
 		app:layout_constraintLeft_toLeftOf="parent"
 		app:layout_constraintBottom_toTopOf="@+id/textViewLink"
+		android:layout_marginTop="4dp"
 		/>
 
 	<TextView
