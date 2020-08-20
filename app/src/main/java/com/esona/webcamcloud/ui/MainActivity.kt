@@ -26,18 +26,34 @@ class MainActivity : AppCompatActivity() {
             btnCam.setOnClickListener{
                 btnCam.isSelected= true
                 btnSettings.isSelected= false
-                switchCamera.visibility= View.VISIBLE
+                switchTranslation.visibility= View.VISIBLE
                 if(navController.currentDestination?.id== R.id.fragmentSettings)
                     navController.popBackStack()
             }
             btnSettings.setOnClickListener{
                 btnCam.isSelected= false
                 btnSettings.isSelected= true
-                switchCamera.visibility= View.GONE
+                switchTranslation.visibility= View.GONE
                 if(navController.currentDestination?.id== R.id.fragmentMain)
                     navController.navigate(R.id.action_fragmentMain_to_fragmentSettings)
             }
+            switchTranslation.setOnCheckedChangeListener { _, b ->
+                TODO("Not yet implemented")
+            }
         }
-
     }
+
+    fun showMessage(title: String, text: String, listener: View.OnClickListener?= null){
+        val dialog = MessageDialog()
+        val bundle = Bundle()
+        bundle.putString("title", title)
+        bundle.putString("text", text)
+        dialog.arguments = bundle
+        listener?.let {
+            dialog.setOkListener(listener)
+
+        }
+        dialog.show(supportFragmentManager, "dialog")
+    }
+
 }
