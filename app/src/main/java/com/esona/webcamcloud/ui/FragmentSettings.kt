@@ -6,14 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.esona.webcamcloud.databinding.FragmentMainBinding
+import com.esona.webcamcloud.databinding.FragmentSettingsBinding
 
 class FragmentSettings : Fragment() {
 
-    private var binding: FragmentMainBinding? = null
+    private var binding: FragmentSettingsBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        binding = FragmentMainBinding.inflate(inflater, container, false)
+        binding = FragmentSettingsBinding.inflate(inflater, container, false)
         val view= binding!!.root
         return view
     }

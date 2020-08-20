@@ -11,13 +11,16 @@
 		android:orientation="horizontal"
 		app:layout_constraintTop_toTopOf="parent"
 		android:id="@+id/layoutTop"
-		android:layout_marginTop="24dp"
+		android:paddingTop="8dp"
+		android:paddingBottom="8dp"
+		android:background="@color/colorPrimary"
 		>
 		<LinearLayout
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
 			android:layout_marginLeft="24dp"
+			android:id="@+id/btnCam"
 			>
 			<ImageView
 				android:layout_width="wrap_content"
@@ -40,6 +43,7 @@
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
 			android:layout_marginLeft="24dp"
+			android:id="@+id/btnSettings"
 			>
 			<ImageView
 				android:layout_width="wrap_content"
@@ -66,7 +70,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/switchCamera"
-			android:switchMinWidth="120dp"
+			android:switchMinWidth="72dp"
 			android:layout_gravity="center_vertical"
 			android:layout_marginRight="24dp"
 			/>
@@ -89,9 +93,11 @@
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="40dp"
-		android:text="Hello World!"
+		android:textAllCaps="true"
 		app:layout_constraintBottom_toBottomOf="parent"
 		android:id="@+id/textViewLink"
+		android:gravity="center"
+		android:background="@color/colorPrimary"
 		/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -76,14 +76,38 @@
 		android:textSize="22sp"
 		android:textColor="@color/gray_black"
 		/>
-	<Switch
-		android:layout_width="128dp"
+	<TextView
+		android:layout_width="wrap_content"
 		android:layout_height="40dp"
+		android:text="@string/main"
 		app:layout_constraintTop_toBottomOf="@+id/textViewCam"
 		app:layout_constraintLeft_toLeftOf="parent"
-		android:layout_marginTop="16dp"
+		android:id="@+id/textViewMain"
+		android:gravity="center_vertical"
+		android:textSize="20sp"
+		android:textColor="@color/gray_black"
+		/>
+
+	<Switch
+		android:layout_width="72dp"
+		android:layout_height="40dp"
+		app:layout_constraintTop_toBottomOf="@+id/textViewCam"
+		app:layout_constraintLeft_toRightOf="@+id/textViewMain"
 		android:id="@+id/switchCamera"
-		android:switchMinWidth="120dp"
+		android:switchMinWidth="72dp"
+		android:layout_marginLeft="16dp"
+		/>
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="40dp"
+		android:text="@string/front"
+		app:layout_constraintTop_toBottomOf="@+id/textViewCam"
+		app:layout_constraintLeft_toRightOf="@+id/switchCamera"
+		android:id="@+id/textViewFront"
+		android:gravity="center_vertical"
+		android:textSize="20sp"
+		android:textColor="@color/gray_black"
+		android:layout_marginLeft="16dp"
 		/>
 	<ImageView
 		android:layout_width="wrap_content"

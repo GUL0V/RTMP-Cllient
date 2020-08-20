@@ -8,14 +8,19 @@
 	<string name="ip_title">Wi-Fi IP: %s</string>
 	<string name="ip_none">NONE</string>
 	<string name="port">Port: %d</string>
+	<string name="port_title">Port</string>
 	<string name="rtsp">RTSP</string>
 	<string name="rtsp_discon">Enable Wi-Fi in mobile phone settings</string>
 	<string name="video_resolution">Video resolution</string>
 	<string name="frame_rate">Frame rate</string>
 	<string name="login">Login</string>
 	<string name="password">Password</string>
-	<string name="lang">English</string>
-	<string name="compress">h24 compression</string>
+	<string name="lang">Language</string>
+	<string name="eng">English</string>
+	<string name="rus">Russian</string>
+	<string name="compress">h264 compression</string>
 	<string name="on">On</string>
 	<string name="off">Off</string>
+	<string name="main">Main</string>
+	<string name="front">Front</string>
 </resources>
