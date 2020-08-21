@@ -1,5 +1,6 @@
 package com.esona.webcamcloud.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
@@ -11,6 +12,8 @@ import com.esona.webcamcloud.R
 import com.esona.webcamcloud.data.BaseEvent
 import com.esona.webcamcloud.data.EventEnum
 import com.esona.webcamcloud.databinding.ActivityMainBinding
+import com.esona.webcamcloud.service.CamService
+import com.esona.webcamcloud.service.CamServiceJ
 import org.greenrobot.eventbus.EventBus
 
 class MainActivity : AppCompatActivity() {
@@ -32,21 +35,25 @@ class MainActivity : AppCompatActivity() {
                 EventBus.getDefault().post(BaseEvent(EventEnum.MAIN))
                 btnCam.isSelected= true
                 btnSettings.isSelected= false
-                switchTranslation.visibility= View.VISIBLE
                 if(navController.currentDestination?.id== R.id.fragmentSettings)
                     navController.popBackStack()
+                switchTranslation.visibility= View.VISIBLE
             }
             btnSettings.setOnClickListener{
                 btnCam.isSelected= false
                 btnSettings.isSelected= true
-                switchTranslation.visibility= View.GONE
                 if(navController.currentDestination?.id== R.id.fragmentMain)
                     navController.navigate(R.id.action_fragmentMain_to_fragmentSettings)
+                switchTranslation.visibility= View.GONE
             }
             switchTranslation.setOnCheckedChangeListener { _, b ->
                 TODO("Not yet implemented")
             }
         }
+        val service= Intent(this, CamService::class.java)
+        service.putExtra("camera", 0)
+        startService(service)
+
     }
 
     fun showMessage(title: String, text: String, listener: View.OnClickListener?= null){

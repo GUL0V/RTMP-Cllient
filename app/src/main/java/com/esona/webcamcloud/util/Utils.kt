@@ -10,7 +10,7 @@ object Utils {
         val res= Settings()
         res.login= prefs.getString("login", "admin")!!
         res.password= prefs.getString("password", "admin")!!
-        res.resolution= prefs.getString("resolution", "admin")!!
+        res.resolution= prefs.getString("resolution", "720p")!!
         res.lang= prefs.getInt("lang", 0)
         res.port= prefs.getInt("port", 1935)
         res.rate= prefs.getInt("rate", 15)

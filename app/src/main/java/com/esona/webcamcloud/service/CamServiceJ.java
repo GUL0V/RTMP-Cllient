@@ -25,7 +25,7 @@ import com.pedro.rtspserver.RtspServerCamera1;
 
 import org.greenrobot.eventbus.EventBus;
 
-public class CamService extends Service implements ConnectCheckerRtsp {
+public class CamServiceJ extends Service implements ConnectCheckerRtsp {
     private RtspServerCamera1 rtspServerCamera1 = null;
     private boolean started;
     private Rect rect;
@@ -43,7 +43,8 @@ public class CamService extends Service implements ConnectCheckerRtsp {
         if(!started){
             started= true;
             startFore();
-            init();
+
+//            init();
         }
         else{
             EventBus.getDefault().post(new BaseEventJ(rtspServerCamera1.getEndPointConnection()));
@@ -63,8 +64,8 @@ public class CamService extends Service implements ConnectCheckerRtsp {
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, channelId)
-                .setContentTitle("test")
-                .setContentText("test");
+                .setContentTitle("WebCamCloud")
+                .setContentText("");
 
         mBuilder.setContentIntent(contentIntent);
 

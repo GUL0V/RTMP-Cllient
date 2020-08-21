@@ -73,7 +73,7 @@ class FragmentMain : Fragment(), EasyPermissions.PermissionCallbacks {
                         Log.e(TAG, "Unable to get host address.")
                         null
                     }
-                    binding.textViewRtspStatus.text= "rtsp://${settings.login}/${settings.password}@${ipAddressString}:${settings.port}"
+                    binding.textViewRtspStatus.text= "rtsp://${settings.login}:${settings.password}@${ipAddressString}:${settings.port}"
                     binding.textViewWifiStatus.text= String.format(getString(R.string.ip_title), ipAddressString)
                 }
                 else {
@@ -146,6 +146,7 @@ class FragmentMain : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun connect(){
         wifiManager = requireContext().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+
         val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         requireContext().registerReceiver(wifiReceiver, intentFilter)
 
