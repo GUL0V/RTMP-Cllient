@@ -19,7 +19,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.esona.webcamcloud.R;
 import com.esona.webcamcloud.ui.MainActivity;
-import com.esona.webcamcloud.util.BaseEvent;
+import com.esona.webcamcloud.util.BaseEventJ;
 import com.pedro.rtsp.utils.ConnectCheckerRtsp;
 import com.pedro.rtspserver.RtspServerCamera1;
 
@@ -46,7 +46,7 @@ public class CamService extends Service implements ConnectCheckerRtsp {
             init();
         }
         else{
-            EventBus.getDefault().post(new BaseEvent(rtspServerCamera1.getEndPointConnection()));
+            EventBus.getDefault().post(new BaseEventJ(rtspServerCamera1.getEndPointConnection()));
         }
         return START_STICKY;
     }
@@ -92,7 +92,7 @@ public class CamService extends Service implements ConnectCheckerRtsp {
         if (rtspServerCamera1.isRecording() || rtspServerCamera1.prepareAudio()
                 && rtspServerCamera1.prepareVideo(640, 480, 30, 1024*1024, false, rotation)) {
             rtspServerCamera1.startStream();
-            EventBus.getDefault().post(new BaseEvent(rtspServerCamera1.getEndPointConnection()));
+            EventBus.getDefault().post(new BaseEventJ(rtspServerCamera1.getEndPointConnection()));
         } else {
             Toast.makeText(this, "Error preparing stream, This device cant do it", Toast.LENGTH_SHORT)
                     .show();

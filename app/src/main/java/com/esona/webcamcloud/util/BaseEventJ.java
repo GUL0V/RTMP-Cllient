@@ -1,9 +1,9 @@
 package com.esona.webcamcloud.util;
 
-public class BaseEvent {
+public class BaseEventJ {
     public String value;
 
-    public BaseEvent(String val) {
+    public BaseEventJ(String val) {
         this.value = val;
     }
 }

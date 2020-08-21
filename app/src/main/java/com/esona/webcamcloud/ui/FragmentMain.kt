@@ -8,10 +8,12 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -20,6 +22,10 @@ import com.esona.webcamcloud.data.Settings
 import com.esona.webcamcloud.databinding.FragmentMainBinding
 import com.esona.webcamcloud.util.Utils
 import pub.devrel.easypermissions.EasyPermissions
+import java.math.BigInteger
+import java.net.InetAddress
+import java.net.UnknownHostException
+import java.nio.ByteOrder
 
 
 class FragmentMain : Fragment(), EasyPermissions.PermissionCallbacks {
@@ -28,9 +34,11 @@ class FragmentMain : Fragment(), EasyPermissions.PermissionCallbacks {
     private val binding get() = _binding!!
     private lateinit var navController: NavController
     private lateinit var wifiManager: WifiManager
+    private lateinit var mHandler: Handler
     lateinit var settings: Settings
 
     private val PERMS = 111
+    private val TAG= FragmentMain::class.java.simpleName
 
 
 /*
@@ -51,12 +59,28 @@ class FragmentMain : Fragment(), EasyPermissions.PermissionCallbacks {
         override fun onReceive(context: Context, intent: Intent) {
             val conMan= context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val netInfo = conMan.getActiveNetworkInfo()
-            if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI){
-                val wifiManager = requireContext().applicationContext
-                    .getSystemService(Context.WIFI_SERVICE) as WifiManager
-                binding.textViewRtspStatus.text= "aaaaaaaaaaaaa"
-            }
+            mHandler.post {
+                if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI){
+                    var ip= wifiManager.connectionInfo.ipAddress
+                    if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
+                        ip = Integer.reverseBytes(ip)
+                    }
 
+                    val ipByteArray= BigInteger.valueOf(ip.toLong()).toByteArray()
+                    val ipAddressString = try {
+                        InetAddress.getByAddress(ipByteArray).hostAddress
+                    } catch (ex: UnknownHostException) {
+                        Log.e(TAG, "Unable to get host address.")
+                        null
+                    }
+                    binding.textViewRtspStatus.text= "rtsp://${settings.login}/${settings.password}@${ipAddressString}:${settings.port}"
+                    binding.textViewWifiStatus.text= String.format(getString(R.string.ip_title), ipAddressString)
+                }
+                else {
+                    binding.textViewRtspStatus.text= getString(R.string.rtsp_discon)
+                    binding.textViewWifiStatus.text= String.format(getString(R.string.ip_title), getString(R.string.ip_none))
+                }
+            }
         }
     }
 
@@ -68,20 +92,21 @@ class FragmentMain : Fragment(), EasyPermissions.PermissionCallbacks {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         navController= Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-
+        mHandler= Handler(Looper.getMainLooper())
+        Log.i(TAG, "before load")
         settings= Utils.loadSettings(requireContext())
 
         with(binding){
             textViewWifiPort.text= String.format(getString(R.string.port), settings.port)
             textViewWifiStatus.text= String.format(getString(R.string.ip_title), getString(R.string.ip_none))
             textViewRtspStatus.text= getString(R.string.rtsp_discon)
-
+            switchCamera.isChecked= settings.camera==1
             switchCamera.setOnCheckedChangeListener { _, b ->
                 settings.camera= if(b) 1 else 0
+                Utils.storeSettings(settings, requireContext())
             }
         }
 
-        wifiManager = requireContext().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         requestPermissions()
         return binding.root
     }
@@ -115,7 +140,12 @@ class FragmentMain : Fragment(), EasyPermissions.PermissionCallbacks {
         connect()
     }
 
+    private fun fillFromSettings(){
+
+    }
+
     private fun connect(){
+        wifiManager = requireContext().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         requireContext().registerReceiver(wifiReceiver, intentFilter)
 

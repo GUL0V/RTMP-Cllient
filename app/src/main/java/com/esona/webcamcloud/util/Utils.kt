@@ -15,7 +15,7 @@ object Utils {
         res.port= prefs.getInt("port", 1935)
         res.rate= prefs.getInt("rate", 15)
         res.camera= prefs.getInt("camera", 0)
-        res.h264= prefs.getBoolean("rate", false)
+        res.h264= prefs.getBoolean("h264", false)
         return res
     }
 

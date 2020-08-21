@@ -9,7 +9,7 @@
 	<string name="ip_none">NONE</string>
 	<string name="port">Port: %d</string>
 	<string name="port_title">Port</string>
-	<string name="rtsp">RTSP</string>
+	<string name="rtsp">RTSP:</string>
 	<string name="rtsp_discon">Enable Wi-Fi in mobile phone settings</string>
 	<string name="video_resolution">Video resolution</string>
 	<string name="frame_rate">Frame rate</string>

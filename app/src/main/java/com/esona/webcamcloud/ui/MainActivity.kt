@@ -5,25 +5,31 @@ import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.esona.webcamcloud.R
+import com.esona.webcamcloud.data.BaseEvent
+import com.esona.webcamcloud.data.EventEnum
 import com.esona.webcamcloud.databinding.ActivityMainBinding
+import org.greenrobot.eventbus.EventBus
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navController= Navigation.findNavController(this, R.id.nav_host_fragment)
+        navController= Navigation.findNavController(this, R.id.nav_host_fragment)
         with(binding){
             btnCam.isSelected= true
             textViewLink.text= Html.fromHtml("<a href=http://webcameracloud.com>webcameracloud.com</a>")
             textViewLink.movementMethod = LinkMovementMethod.getInstance()
             btnCam.setOnClickListener{
+                EventBus.getDefault().post(BaseEvent(EventEnum.MAIN))
                 btnCam.isSelected= true
                 btnSettings.isSelected= false
                 switchTranslation.visibility= View.VISIBLE
@@ -56,4 +62,8 @@ class MainActivity : AppCompatActivity() {
         dialog.show(supportFragmentManager, "dialog")
     }
 
+    override fun onBackPressed() {
+        if(navController.currentDestination?.id== R.id.fragmentMain)
+            super.onBackPressed()
+    }
 }
