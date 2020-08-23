@@ -1,3 +1,10 @@
 package com.esona.webcamcloud.data
 
-data class BaseEvent(val type: EventEnum)
+import android.os.Bundle
+
+data class BaseEvent(val type: EventEnum){
+    lateinit var bundle: Bundle
+    constructor(type: EventEnum, bundle: Bundle) : this(type){
+        this.bundle= bundle
+    }
+}

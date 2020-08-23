@@ -1,7 +1,11 @@
 package com.esona.webcamcloud.util
 
 import android.content.Context
+import android.os.Bundle
+import com.esona.webcamcloud.data.BaseEvent
+import com.esona.webcamcloud.data.EventEnum
 import com.esona.webcamcloud.data.Settings
+import org.greenrobot.eventbus.EventBus
 
 object Utils {
 
@@ -30,6 +34,25 @@ object Utils {
         prefs.putInt("camera", data.camera)
         prefs.putBoolean("h264", data.h264)
         prefs.commit()
+    }
+
+    fun sendSettings(settings: Settings){
+        val bundle= Bundle()
+        bundle.putParcelable("settings", settings)
+        val ev= BaseEvent(EventEnum.SETTINGS, bundle)
+        EventBus.getDefault().post(ev)
+    }
+
+    fun sendStream(stream: Boolean){
+        val b= Bundle()
+        b.putBoolean("stream", stream)
+        EventBus.getDefault().post(BaseEvent(EventEnum.STREAM, b))
+    }
+
+    fun sendConnString(ip: Int){
+        val b= Bundle()
+        b.putInt("ip", ip)
+        EventBus.getDefault().post(BaseEvent(EventEnum.CONNECTION, b))
     }
 
 }

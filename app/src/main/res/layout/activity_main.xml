@@ -70,9 +70,13 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/switchTranslation"
-			android:switchMinWidth="72dp"
+			android:switchMinWidth="56dp"
 			android:layout_gravity="center_vertical"
 			android:layout_marginRight="24dp"
+			android:text="@string/translation"
+			android:textSize="14sp"
+			android:textColor="@color/gray_black"
+			android:switchPadding="16dp"
 			/>
 
 	</LinearLayout>

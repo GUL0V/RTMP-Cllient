@@ -58,13 +58,26 @@ class FragmentSettings : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: BaseEvent){
-        with(binding){
-            val login= if(editTextLogin.text.isEmpty()) "admin" else editTextLogin.text.toString()
-            val password= if(editTextPassword.text.isEmpty()) "admin" else editTextPassword.text.toString()
-            val port= if(editTextPort.text.isEmpty()) 1935 else Integer.parseInt(editTextPort.text.toString())
-            val settings = Settings(textViewResolution.text.toString(), Integer.parseInt(textViewRate.text.toString()),
-                login, password, port, lang, switchEncode.isChecked)
-            Utils.storeSettings(settings, requireContext())
+        if(event.type== EventEnum.MAIN) {
+            with(binding) {
+                val login =
+                    if (editTextLogin.text.isEmpty()) "admin" else editTextLogin.text.toString()
+                val password =
+                    if (editTextPassword.text.isEmpty()) "admin" else editTextPassword.text.toString()
+                val port =
+                    if (editTextPort.text.isEmpty()) 1935 else Integer.parseInt(editTextPort.text.toString())
+                val settings = Settings(
+                    textViewResolution.text.toString(),
+                    Integer.parseInt(textViewRate.text.toString()),
+                    login,
+                    password,
+                    port,
+                    lang,
+                    switchEncode.isChecked
+                )
+                Utils.storeSettings(settings, requireContext())
+                Utils.sendSettings(settings)
+            }
         }
     }
 }
