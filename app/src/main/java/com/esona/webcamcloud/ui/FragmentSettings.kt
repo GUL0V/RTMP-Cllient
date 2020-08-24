@@ -1,7 +1,6 @@
 package com.esona.webcamcloud.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,7 +34,6 @@ class FragmentSettings : Fragment() {
             editTextLogin.setText(settings.login)
             editTextPassword.setText(settings.password)
             editTextPort.setText("${settings.port}")
-            switchEncode.isChecked= settings.h264
 
         }
         return binding.root
@@ -72,8 +70,7 @@ class FragmentSettings : Fragment() {
                     login,
                     password,
                     port,
-                    lang,
-                    switchEncode.isChecked
+                    lang
                 )
                 Utils.storeSettings(settings, requireContext())
                 Utils.sendSettings(settings)

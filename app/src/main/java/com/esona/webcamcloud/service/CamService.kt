@@ -58,6 +58,7 @@ class CamService : Service(), ConnectCheckerRtsp {
     fun onEvent(ev: BaseEvent){
         if(ev.type== EventEnum.STREAM){
             val stream= ev.bundle.getBoolean("stream")
+            Log.i(TAG, "stream = $stream")
             if(stream)
                 startStream()
             else
@@ -65,6 +66,7 @@ class CamService : Service(), ConnectCheckerRtsp {
         }
         if(ev.type== EventEnum.SETTINGS){
             settings= ev.bundle.getParcelable("settings")!!
+            Log.i(TAG, "settings received, restart stream")
             stopStream()
             startStream()
         }
@@ -72,6 +74,7 @@ class CamService : Service(), ConnectCheckerRtsp {
 
     private val wifiListener= object: WifiMonitor.StateChanged{
         override fun onChanged(available: Boolean, ip: Int) {
+            Log.i(TAG, "wifi enabled = $available, ip= $ip")
             this@CamService.ip = ip
             Utils.sendConnString(this@CamService.ip)
             if(ip== 0)
@@ -84,12 +87,14 @@ class CamService : Service(), ConnectCheckerRtsp {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let{
             settings= it.getParcelableExtra("settings")!!
+            Log.i(TAG, "settings received at start service")
         }
         if (!serviceStarted) {
             serviceStarted = true
             startFore()
             wifimon= WifiMonitor(wifiListener)
             wifimon?.enable(this.applicationContext)
+            Log.i(TAG, "service started")
         }
 
         Utils.sendConnString(ip)
@@ -125,7 +130,11 @@ class CamService : Service(), ConnectCheckerRtsp {
     }
 
     private fun stopStream(){
-
+        rtspServerCamera1?.let{
+            it.stopPreview()
+            it.stopStream()
+            Log.i(TAG, "camera and stream stopped")
+        }
     }
 
     private fun startStream() {
@@ -139,13 +148,13 @@ class CamService : Service(), ConnectCheckerRtsp {
     }
 
     private fun startCamera(width: Int, height: Int) {
-        rtspServerCamera1?.let{
-            it.stopPreview()
-            it.stopStream()
+        if(rtspServerCamera1== null) {
+            rtspServerCamera1 = RtspServerCamera1(this, this, settings.port)
+            Log.i(TAG, "camera created")
         }
-
-        rtspServerCamera1 = RtspServerCamera1(this, this, settings.port)
         rtspServerCamera1?.let{
+
+            Log.i(TAG, "restart camera and stream with current settings")
             it.setAuthorization(settings.login, settings.password)
 
             val facing= if(settings.camera== 0) CameraHelper.Facing.BACK else CameraHelper.Facing.FRONT

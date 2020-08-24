@@ -261,7 +261,7 @@
 			app:layout_constraintBottom_toBottomOf="parent"
 			/>
 	</androidx.constraintlayout.widget.ConstraintLayout>
-	<androidx.constraintlayout.widget.ConstraintLayout
+	<!--androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
@@ -293,7 +293,6 @@
 			android:checked="false"
 			android:switchMinWidth="72dp"
 			/>
-			/>
-	</androidx.constraintlayout.widget.ConstraintLayout>
+	</androidx.constraintlayout.widget.ConstraintLayout-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

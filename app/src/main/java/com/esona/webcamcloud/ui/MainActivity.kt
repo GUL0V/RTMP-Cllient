@@ -14,7 +14,6 @@ import com.esona.webcamcloud.data.BaseEvent
 import com.esona.webcamcloud.data.EventEnum
 import com.esona.webcamcloud.databinding.ActivityMainBinding
 import com.esona.webcamcloud.service.CamService
-import com.esona.webcamcloud.service.CamServiceJ
 import com.esona.webcamcloud.util.Utils
 import org.greenrobot.eventbus.EventBus
 import pub.devrel.easypermissions.EasyPermissions
