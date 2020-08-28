@@ -20,7 +20,6 @@ import com.esona.webcamcloud.data.Settings
 import com.esona.webcamcloud.ui.MainActivity
 import com.esona.webcamcloud.util.Utils
 import com.esona.webcamcloud.util.WifiMonitor
-import com.pedro.encoder.input.video.CameraHelper
 import com.pedro.rtsp.utils.ConnectCheckerRtsp
 import com.pedro.rtspserver.RtspServerCamera1
 import org.greenrobot.eventbus.EventBus
@@ -57,9 +56,9 @@ class CamService : Service(), ConnectCheckerRtsp {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(ev: BaseEvent){
         if(ev.type== EventEnum.STREAM){
-            val stream= ev.bundle.getBoolean("stream")
-            Log.i(TAG, "stream = $stream")
-            if(stream)
+            streamAllowed= ev.bundle.getBoolean("stream")
+            Log.i(TAG, "stream = $streamAllowed")
+            if(streamAllowed)
                 startStream()
             else
                 stopStream()
@@ -131,14 +130,13 @@ class CamService : Service(), ConnectCheckerRtsp {
 
     private fun stopStream(){
         rtspServerCamera1?.let{
-            it.stopPreview()
             it.stopStream()
             Log.i(TAG, "camera and stream stopped")
         }
     }
 
     private fun startStream() {
-        if(ip> 0 && streamAllowed){
+        if(ip!= 0 && streamAllowed){
             val disp =
                 (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
             val rect = Rect()
@@ -157,13 +155,13 @@ class CamService : Service(), ConnectCheckerRtsp {
             Log.i(TAG, "restart camera and stream with current settings")
             it.setAuthorization(settings.login, settings.password)
 
-            val facing= if(settings.camera== 0) CameraHelper.Facing.BACK else CameraHelper.Facing.FRONT
-            it.startPreview(facing, width, height)
-
+            val isFacingBack= settings.camera== 0
             val rotation = 180
             if (it.isRecording || it.prepareAudio()
                 && it.prepareVideo(640, 480, settings.rate, 1024 * 1024, false, rotation)) {
                 it.startStream()
+                if((it.isFrontCamera && isFacingBack) || (!it.isFrontCamera && !isFacingBack))
+                    it.switchCamera()
             }
             else {
                 Toast.makeText(

@@ -24,7 +24,7 @@
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
 		app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
-		android:paddingTop="16dp"
+		android:paddingTop="12dp"
 		android:id="@+id/layoutResolution"
 		>
 		<TextView
@@ -36,7 +36,7 @@
 			android:id="@+id/textViewResTitle"
 			android:textSize="16sp"
 			android:textColor="@color/gray_black"
-
+			android:paddingBottom="12dp"
 			/>
 		<TextView
 			android:layout_width="0dp"
@@ -50,7 +50,7 @@
 			android:textColor="@color/gray_black"
 			android:gravity="right"
 			android:paddingRight="24dp"
-			android:paddingBottom="8dp"
+			android:paddingBottom="12dp"
 			/>
 		<TextView
 			android:layout_width="match_parent"
@@ -64,7 +64,6 @@
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
 		app:layout_constraintTop_toBottomOf="@+id/layoutResolution"
-		android:paddingTop="16dp"
 		android:id="@+id/layoutRate"
 		>
 		<TextView
@@ -72,24 +71,47 @@
 			android:layout_height="wrap_content"
 			android:text="@string/frame_rate"
 			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintLeft_toLeftOf="parent"
 			android:id="@+id/textViewRateTitle"
 			android:textSize="16sp"
 			android:textColor="@color/gray_black"
+			android:paddingTop="12dp"
+			android:paddingBottom="12dp"
+			/>
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/btnDec"
+			app:layout_constraintRight_toLeftOf="@+id/textViewRate"
+			android:src="@drawable/ic_menu_left_black_36dp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			android:adjustViewBounds="true"
+			/>
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/btnInc"
+			android:rotation="180"
+			app:layout_constraintRight_toRightOf="parent"
+			android:src="@drawable/ic_menu_left_black_36dp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			android:adjustViewBounds="true"
 			/>
 		<TextView
-			android:layout_width="0dp"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="15"
 			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintRight_toRightOf="parent"
-			app:layout_constraintLeft_toRightOf="@+id/textViewRateTitle"
+			app:layout_constraintRight_toLeftOf="@+id/btnInc"
+			app:layout_constraintBottom_toBottomOf="parent"
 			android:id="@+id/textViewRate"
 			android:textSize="16sp"
 			android:textColor="@color/gray_black"
-			android:gravity="right"
-			android:paddingRight="24dp"
-			android:paddingBottom="8dp"
+			android:gravity="center"
+			android:padding="12dp"
 			/>
 		<TextView
 			android:layout_width="match_parent"
@@ -103,7 +125,7 @@
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
 		app:layout_constraintTop_toBottomOf="@+id/layoutRate"
-		android:paddingTop="16dp"
+		android:paddingTop="12dp"
 		android:id="@+id/layoutLogin"
 		>
 		<TextView
@@ -115,7 +137,7 @@
 			android:id="@+id/textViewLoginTitle"
 			android:textSize="16sp"
 			android:textColor="@color/gray_black"
-
+			android:paddingBottom="12dp"
 			/>
 		<EditText
 			android:layout_width="0dp"
@@ -129,7 +151,7 @@
 			android:textColor="@color/gray_black"
 			android:gravity="right|center"
 			android:paddingRight="24dp"
-			android:paddingBottom="8dp"
+			android:paddingBottom="12dp"
 			android:background="@android:color/transparent"
 			/>
 		<TextView
@@ -144,7 +166,7 @@
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
 		app:layout_constraintTop_toBottomOf="@+id/layoutLogin"
-		android:paddingTop="16dp"
+		android:paddingTop="12dp"
 		android:id="@+id/layoutPassword"
 		>
 		<TextView
@@ -156,7 +178,7 @@
 			android:id="@+id/textViewPasswordTitle"
 			android:textSize="16sp"
 			android:textColor="@color/gray_black"
-
+			android:paddingBottom="12dp"
 			/>
 		<EditText
 			android:layout_width="0dp"
@@ -170,7 +192,7 @@
 			android:textColor="@color/gray_black"
 			android:gravity="right|center"
 			android:paddingRight="24dp"
-			android:paddingBottom="8dp"
+			android:paddingBottom="12dp"
 			android:background="@android:color/transparent"
 			/>
 		<TextView
@@ -185,7 +207,7 @@
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
 		app:layout_constraintTop_toBottomOf="@+id/layoutPassword"
-		android:paddingTop="16dp"
+		android:paddingTop="12dp"
 		android:id="@+id/layoutPort"
 		>
 		<TextView
@@ -197,7 +219,7 @@
 			android:id="@+id/textViewPortTitle"
 			android:textSize="16sp"
 			android:textColor="@color/gray_black"
-
+			android:paddingBottom="12dp"
 			/>
 		<EditText
 			android:layout_width="0dp"
@@ -211,7 +233,7 @@
 			android:textColor="@color/gray_black"
 			android:gravity="right|center"
 			android:paddingRight="24dp"
-			android:paddingBottom="8dp"
+			android:paddingBottom="12dp"
 			android:background="@android:color/transparent"
 			android:inputType="number"
 			/>
@@ -227,7 +249,7 @@
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
 		app:layout_constraintTop_toBottomOf="@+id/layoutPort"
-		android:paddingTop="16dp"
+		android:paddingTop="12dp"
 		android:id="@+id/layoutLang"
 		>
 		<TextView
@@ -239,6 +261,7 @@
 			android:id="@+id/textViewLangTitle"
 			android:textSize="16sp"
 			android:textColor="@color/gray_black"
+			android:paddingBottom="12dp"
 			/>
 		<TextView
 			android:layout_width="0dp"
@@ -252,7 +275,7 @@
 			android:textColor="@color/gray_black"
 			android:gravity="right"
 			android:paddingRight="24dp"
-			android:paddingBottom="8dp"
+			android:paddingBottom="12dp"
 			/>
 		<TextView
 			android:layout_width="match_parent"

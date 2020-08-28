@@ -20,6 +20,7 @@ class FragmentSettings : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private var lang= 0
+    private var fps: Int= 15
 
     private val TAG= FragmentMain::class.java.simpleName
 
@@ -34,7 +35,15 @@ class FragmentSettings : Fragment() {
             editTextLogin.setText(settings.login)
             editTextPassword.setText(settings.password)
             editTextPort.setText("${settings.port}")
-
+            fps= settings.rate
+            btnInc.setOnClickListener{
+                fps= Math.min(fps++, 60)
+                textViewRate.text= "$fps"
+            }
+            btnInc.setOnClickListener{
+                fps= Math.max(fps--, 1)
+                textViewRate.text= "$fps"
+            }
         }
         return binding.root
     }
@@ -66,7 +75,7 @@ class FragmentSettings : Fragment() {
                     if (editTextPort.text.isEmpty()) 1935 else Integer.parseInt(editTextPort.text.toString())
                 val settings = Settings(
                     textViewResolution.text.toString(),
-                    Integer.parseInt(textViewRate.text.toString()),
+                    fps,
                     login,
                     password,
                     port,
