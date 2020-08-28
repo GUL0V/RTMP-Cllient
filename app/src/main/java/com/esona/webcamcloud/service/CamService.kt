@@ -154,7 +154,6 @@ class CamService : Service(), ConnectCheckerRtsp {
 
             Log.i(TAG, "restart camera and stream with current settings")
             it.setAuthorization(settings.login, settings.password)
-
             val isFacingBack= settings.camera== 0
             val rotation = 180
             if (it.isRecording || it.prepareAudio()

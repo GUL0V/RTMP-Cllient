@@ -37,11 +37,11 @@ class FragmentSettings : Fragment() {
             editTextPort.setText("${settings.port}")
             fps= settings.rate
             btnInc.setOnClickListener{
-                fps= Math.min(fps++, 60)
+                fps= (++fps).coerceAtMost(60)
                 textViewRate.text= "$fps"
             }
-            btnInc.setOnClickListener{
-                fps= Math.max(fps--, 1)
+            btnDec.setOnClickListener{
+                fps= (--fps).coerceAtLeast(1)
                 textViewRate.text= "$fps"
             }
         }

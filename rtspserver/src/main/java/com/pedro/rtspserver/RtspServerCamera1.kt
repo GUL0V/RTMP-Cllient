@@ -6,6 +6,7 @@ import android.os.Build
 import android.view.SurfaceView
 import android.view.TextureView
 import androidx.annotation.RequiresApi
+import com.pedro.encoder.input.video.CameraHelper
 import com.pedro.encoder.utils.CodecUtil
 import com.pedro.rtplibrary.base.Camera1Base
 import com.pedro.rtplibrary.view.LightOpenGlView
@@ -73,6 +74,12 @@ class RtspServerCamera1 : Camera1Base {
     override fun setAuthorization(user: String, password: String) { //not developed
         rtspServer.setAuthorization(user, password)
     }
+
+/*
+    fun setFacing(facing: CameraHelper.Facing){
+        switchCamera()
+    }
+*/
 
     fun startStream() {
         super.startStream("")
