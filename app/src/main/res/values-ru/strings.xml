@@ -1,7 +1,7 @@
 <resources>
 	<string name="app_name">WebCamCloud</string>
 	<string name="cam">Главная</string>
-	<string name="cam_title">Camera:</string>
+	<string name="cam_title">Камера:</string>
 	<string name="settings">Настройки</string>
 	<string name="connected">Сеть Wi-Fi</string>
 	<string name="disconnected">Wi-Fi отключен</string>
@@ -21,7 +21,7 @@
 	<string name="compress">h264 compression</string>
 	<string name="on">Вкл</string>
 	<string name="off">Выкл</string>
-	<string name="main">Главная</string>
+	<string name="main">Задняя</string>
 	<string name="front">Передняя</string>
     <string name="error">Ошибка</string>
     <string name="perm_error_text">Приложение не будет работать без всех необходимых разрешений</string>

@@ -11,13 +11,13 @@
 
     <LinearLayout
             android:orientation="vertical"
-            android:layout_width="720dp"
+            android:layout_width="300dp"
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_height="0dp" android:layout_weight="1">
         <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_margin="32dp"
@@ -31,10 +31,9 @@
                     android:id="@+id/textViewCaption" android:gravity="center"
                     tools:text="BIG Caption"
                     android:textColor="@color/gray_black"
-                    android:layout_marginTop="64dp"
                 />
             <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
@@ -45,18 +44,22 @@
             </LinearLayout>
     </LinearLayout>
     <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray_light"/>
+            android:background="@color/gray_light"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+        />
     <Button
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:padding="24dp"
+            android:padding="16dp"
             android:layout_marginBottom="20dp"
-            android:backgroundTint="@color/colorPrimary"
+            android:background="@drawable/rounded_rect_rsmall"
+            android:textColor="@color/colorAccent"
             android:text="OK"
             android:id="@+id/buttonOK"
             android:layout_gravity="center"
-
+            android:layout_marginTop="16dp"
         />
 </LinearLayout>

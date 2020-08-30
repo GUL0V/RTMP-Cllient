@@ -132,6 +132,7 @@ class CamService : Service(), ConnectCheckerRtsp {
         rtspServerCamera1?.let{
             it.stopStream()
             Log.i(TAG, "camera and stream stopped")
+            Utils.storeBoolean(this, "serviceStarted", false)
         }
     }
 
@@ -142,6 +143,7 @@ class CamService : Service(), ConnectCheckerRtsp {
             val rect = Rect()
             disp.getRectSize(rect)
             startCamera(rect.width(), rect.height())
+            Utils.storeBoolean(this, "serviceStarted", true)
         }
     }
 

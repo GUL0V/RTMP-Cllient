@@ -1,7 +1,6 @@
 package com.esona.webcamcloud.ui
 
 import android.content.DialogInterface
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +17,6 @@ import com.pedro.rtplibrary.rtsp.RtspCamera1
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
 
 class FragmentSettings : Fragment() {
 
@@ -37,14 +35,17 @@ class FragmentSettings : Fragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         settings= Utils.loadSettings(requireContext())
+// todo get resolutions from service
         val cam= RtspCamera1(requireContext(), null)
         val resolutions= if(settings.camera== 0) cam.resolutionsBack else cam.resolutionsFront
         val strResolutions= resolutions.map {
             "${it.width}x${it.height}"
         }.toTypedArray()
 
+        val checked= settings.resolution.coerceAtMost(strResolutions.size - 1)
+
         with(binding){
-            textViewResolution.text= strResolutions[settings.resolution]
+            textViewResolution.text= strResolutions[checked]
             textViewLang.text= if(settings.lang== 0) getString(R.string.eng) else getString(R.string.rus)
             textViewRate.text= "${settings.rate}"
             editTextLogin.setText(settings.login)
@@ -66,15 +67,19 @@ class FragmentSettings : Fragment() {
                                 di, i ->
                             settings.lang= i
                             textViewLang.text= if(i== 0) getString(R.string.eng) else getString(R.string.rus)
+                            Utils.storeSettings(settings, requireContext())
                             di.dismiss()
+                            activity?.recreate()
                         })
                 dialog.create().show()
 
             }
 
+            settings.resolution= checked
+
             textViewResolution.setOnClickListener{
                 val dialog= AlertDialog.Builder(requireContext())
-                    .setSingleChoiceItems(strResolutions, 0,
+                    .setSingleChoiceItems(strResolutions, checked,
                         DialogInterface.OnClickListener {
                                 di, i ->
                             settings.resolution= i
@@ -90,11 +95,13 @@ class FragmentSettings : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding= null
+        Utils.storeBoolean(requireContext(), "settingsStarted", false)
     }
 
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
+        Utils.storeBoolean(requireContext(), "settingsStarted", true)
     }
 
     override fun onPause() {
@@ -133,17 +140,5 @@ class FragmentSettings : Fragment() {
         }
     }
 
-    private fun changeLocale(lang: String){
-        val locale= Locale(lang)
-        //Log.e("Lan",session.getLanguage());
-        //Log.e("Lan",session.getLanguage());
-        val config = Configuration(requireContext().resources.configuration)
-        Locale.setDefault(locale)
-        config.setLocale(locale)
-
-        activity?.baseContext?.resources?.updateConfiguration(
-            config,
-            requireContext().resources.displayMetrics
-        )    }
 }
 

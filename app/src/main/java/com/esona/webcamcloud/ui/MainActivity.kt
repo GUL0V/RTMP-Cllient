@@ -1,6 +1,7 @@
 package com.esona.webcamcloud.ui
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
@@ -27,6 +28,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
     private lateinit var navController: NavController
     private val PERMS = 111
 
+    override fun attachBaseContext(newBase: Context?) {
+        val settings= Utils.loadSettings(newBase!!)
+        val lang= if(settings.lang== 0) "en" else "ru"
+        super.attachBaseContext(Utils.applyLang(newBase, lang))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -34,7 +41,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
 
         navController= Navigation.findNavController(this, R.id.nav_host_fragment)
         with(binding){
-            btnCam.isSelected= true
+            if(Utils.loadBoolean(this@MainActivity, "settingsStarted")) {
+                btnSettings.isSelected = true
+                // todo switch to settings fragment
+            }
+            else btnCam.isSelected= true
+            // todo check whether service is started
+
+
             textViewLink.text= Html.fromHtml("<a href=http://webcameracloud.com>webcameracloud.com</a>")
             textViewLink.movementMethod = LinkMovementMethod.getInstance()
             btnCam.setOnClickListener{
@@ -56,15 +70,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
                 Utils.sendStream(b)
             }
         }
-        EventBus.getDefault().register(this)
+//        EventBus.getDefault().register(this)
         requestPermissions()
     }
 
     override fun onDestroy() {
-        EventBus.getDefault().unregister(this)
+//        EventBus.getDefault().unregister(this)
         super.onDestroy()
     }
 
+/*
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEvent(event: BaseEvent) {
         if(event.type== EventEnum.SETTINGS){
@@ -72,6 +87,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
             binding.textViewCam.text= if(settings.camera== 0) getString(R.string.main) else  getString(R.string.front)
         }
     }
+*/
 
     fun showMessage(title: String, text: String, listener: View.OnClickListener?= null){
         val dialog = MessageDialog()
