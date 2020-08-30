@@ -146,10 +146,11 @@ class CamService : Service(), ConnectCheckerRtsp {
     }
 
     private fun startCamera(width: Int, height: Int) {
-        if(rtspServerCamera1== null) {
-            rtspServerCamera1 = RtspServerCamera1(this, this, settings.port)
-            Log.i(TAG, "camera created")
-        }
+        stopStream()
+
+        rtspServerCamera1 = RtspServerCamera1(this, this, settings.port)
+        Log.i(TAG, "camera created")
+
         rtspServerCamera1?.let{
 
             Log.i(TAG, "restart camera and stream with current settings")

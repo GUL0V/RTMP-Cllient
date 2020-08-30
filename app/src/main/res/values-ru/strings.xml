@@ -1,0 +1,31 @@
+<resources>
+	<string name="app_name">WebCamCloud</string>
+	<string name="cam">Главная</string>
+	<string name="cam_title">Camera:</string>
+	<string name="settings">Настройки</string>
+	<string name="connected">Сеть Wi-Fi</string>
+	<string name="disconnected">Wi-Fi отключен</string>
+	<string name="ip_title">Wi-Fi IP: %s</string>
+	<string name="ip_none">НЕ ОПРЕДЕЛЕНО</string>
+	<string name="port">Порт: %d</string>
+	<string name="port_title">Порт</string>
+	<string name="rtsp">RTSP:</string>
+	<string name="rtsp_discon">Включите Wi-Fi в настройках телефона</string>
+	<string name="video_resolution">Разрешение видео</string>
+	<string name="frame_rate">Кадров в секунду</string>
+	<string name="login">Логин</string>
+	<string name="password">Пароль</string>
+	<string name="lang">Язык</string>
+	<string name="eng">Английский</string>
+	<string name="rus">Русский</string>
+	<string name="compress">h264 compression</string>
+	<string name="on">Вкл</string>
+	<string name="off">Выкл</string>
+	<string name="main">Главная</string>
+	<string name="front">Передняя</string>
+    <string name="error">Ошибка</string>
+    <string name="perm_error_text">Приложение не будет работать без всех необходимых разрешений</string>
+    <string name="cancel">Отмена</string>
+	<string name="translation">Трансляция</string>
+	<string name="err_port">Приложение не может использовать порты ниже 1024. Установлен порт по умолчанию 1935</string>
+</resources>

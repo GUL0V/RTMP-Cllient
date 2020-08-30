@@ -12,10 +12,13 @@ import androidx.navigation.Navigation
 import com.esona.webcamcloud.R
 import com.esona.webcamcloud.data.BaseEvent
 import com.esona.webcamcloud.data.EventEnum
+import com.esona.webcamcloud.data.Settings
 import com.esona.webcamcloud.databinding.ActivityMainBinding
 import com.esona.webcamcloud.service.CamService
 import com.esona.webcamcloud.util.Utils
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import pub.devrel.easypermissions.EasyPermissions
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
@@ -53,7 +56,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
                 Utils.sendStream(b)
             }
         }
+        EventBus.getDefault().register(this)
         requestPermissions()
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().unregister(this)
+        super.onDestroy()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEvent(event: BaseEvent) {
+        if(event.type== EventEnum.SETTINGS){
+            val settings: Settings = event.bundle.getParcelable("settings")!!
+            binding.textViewCam.text= if(settings.camera== 0) getString(R.string.main) else  getString(R.string.front)
+        }
     }
 
     fun showMessage(title: String, text: String, listener: View.OnClickListener?= null){

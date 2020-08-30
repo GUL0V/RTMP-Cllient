@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -81,12 +82,20 @@ class FragmentMain : Fragment(){
                 Log.e(TAG, "Unable to get host address.")
                 null
             }
-            binding.textViewRtspStatus.text= "rtsp://${settings.login}:${settings.password}@${ipAddressString}:${settings.port}"
-            binding.textViewWifiStatus.text= String.format(getString(R.string.ip_title), ipAddressString)
+            with(binding){
+                textViewRtspStatus.text= "rtsp://${settings.login}:${settings.password}@${ipAddressString}:${settings.port}"
+                textViewWifiStatus.text= String.format(getString(R.string.ip_title), ipAddressString)
+                textViewWifi.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(requireContext(), R.drawable.ic_wifi_24px),
+                    null, null, null)
+            }
         }
         else{
-            binding.textViewRtspStatus.text= getString(R.string.rtsp_discon)
-            binding.textViewWifiStatus.text= String.format(getString(R.string.ip_title), getString(R.string.ip_none))
+            with(binding){
+                textViewRtspStatus.text= getString(R.string.rtsp_discon)
+                textViewWifiStatus.text= String.format(getString(R.string.ip_title), getString(R.string.ip_none))
+                textViewWifi.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(requireContext(), R.drawable.ic_wifi_off_24px),
+                    null, null, null)
+            }
         }
     }
 

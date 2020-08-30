@@ -26,5 +26,6 @@
     <string name="error">Error</string>
     <string name="perm_error_text">This app cannot work without necessary permissions</string>
     <string name="cancel">Cancel</string>
-	<string name="translation">Трансляция</string>
+	<string name="translation">Translation</string>
+	<string name="err_port">This app cannot use ports below 1024. The default port 1935 is set</string>
 </resources>
