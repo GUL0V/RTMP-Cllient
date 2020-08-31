@@ -7,6 +7,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
+import android.hardware.Camera
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
@@ -46,6 +47,7 @@ class CamService : Service(), ConnectCheckerRtsp {
 
     override fun onCreate() {
         super.onCreate()
+        startForegraund()
         EventBus.getDefault().register(this)
     }
 
@@ -60,15 +62,18 @@ class CamService : Service(), ConnectCheckerRtsp {
         if(ev.type== EventEnum.STREAM){
             streamAllowed= ev.bundle.getBoolean("stream")
             Log.i(TAG, "stream = $streamAllowed")
-            if(streamAllowed)
-                startStream()
+            if(streamAllowed) {
+                if (rtspServerCamera1 == null)
+                    startStream()
+            }
             else
                 stopStream()
         }
         if(ev.type== EventEnum.SETTINGS){
-            settings= ev.bundle.getParcelable("settings")!!
-            Log.i(TAG, "settings received, restart stream")
             stopStream()
+            settings= ev.bundle.getParcelable("settings")!!
+            settings.resolutions= getResolutions()
+            Log.i(TAG, "settings received, restart stream")
             startStream()
         }
     }
@@ -86,16 +91,14 @@ class CamService : Service(), ConnectCheckerRtsp {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        intent?.let{
-            settings= it.getParcelableExtra("settings")!!
-            Log.i(TAG, "settings received at start service")
-        }
+        settings= Utils.loadSettings(this)
+        Log.i(TAG, "settings loaded at start service")
         if (!serviceStarted) {
             serviceStarted = true
-            startFore()
+            startForegraund()
             wifimon= WifiMonitor(wifiListener)
             wifimon?.enable(this.applicationContext)
-            getResolutions()
+            settings.resolutions= getResolutions()
             Log.i(TAG, "service started")
         }
 
@@ -103,7 +106,8 @@ class CamService : Service(), ConnectCheckerRtsp {
         return START_STICKY
     }
 
-    private fun startFore() {
+    private fun startForegraund() {
+        Log.i(TAG, "---------start foreground")
         val channelId: String = getString(R.string.app_name)
         val mNotificationManager =
             this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -128,40 +132,43 @@ class CamService : Service(), ConnectCheckerRtsp {
             .setContentTitle("WebCamCloud")
             .setContentText("")
         mBuilder.setContentIntent(contentIntent)
-        startForeground(0, mBuilder.build())
+        startForeground(111, mBuilder.build())
     }
 
-    private fun getResolutions(){
+    private fun getResolutions(): List<Camera.Size>{
         val cam= RtspCamera1(this, null)
         val resolutions= if(settings.camera== 0) cam.resolutionsBack else cam.resolutionsFront
         val strResolutions= resolutions.map {
             "${it.width}x${it.height}"
-        }.toTypedArray()
+        }
         val bundle= Bundle()
-        bundle.putStringArray("resolutions", strResolutions)
+        bundle.putStringArray("resolutions", strResolutions.toTypedArray())
         EventBus.getDefault().postSticky(BaseEvent(EventEnum.RESOLUTION, bundle))
+        return resolutions
     }
     private fun stopStream(){
         rtspServerCamera1?.let{
             it.stopStream()
             Log.i(TAG, "camera and stream stopped")
-            Utils.storeBoolean(this, "serviceStarted", false)
+            Utils.storeBoolean(this, "streamStarted", false)
+            rtspServerCamera1= null
         }
     }
 
     private fun startStream() {
         if(ip!= 0 && streamAllowed){
+/*
             val disp =
                 (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
             val rect = Rect()
             disp.getRectSize(rect)
-            startCamera(rect.width(), rect.height())
-            Utils.storeBoolean(this, "serviceStarted", true)
+*/
+            startCamera()
+            Utils.storeBoolean(this, "streamStarted", true)
         }
     }
 
-    private fun startCamera(width: Int, height: Int) {
-        stopStream()
+    private fun startCamera() {
 
         rtspServerCamera1 = RtspServerCamera1(this, this, settings.port)
         Log.i(TAG, "camera created")
@@ -172,8 +179,14 @@ class CamService : Service(), ConnectCheckerRtsp {
             it.setAuthorization(settings.login, settings.password)
             val isFacingBack= settings.camera== 0
             val rotation = 180
+            var w = 640
+            var h = 480
+            settings.resolutions?.let{
+                w= it[settings.resolution].width
+                h= it[settings.resolution].height
+            }
             if (it.isRecording || it.prepareAudio()
-                && it.prepareVideo(640, 480, settings.rate, 1024 * 1024, false, rotation)) {
+                && it.prepareVideo(w, h, settings.rate, 1024 * 1024, false, rotation)) {
                 it.startStream()
                 if((it.isFrontCamera && isFacingBack) || (!it.isFrontCamera && !isFacingBack))
                     it.switchCamera()

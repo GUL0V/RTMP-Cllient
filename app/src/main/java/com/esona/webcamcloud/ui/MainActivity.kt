@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -17,7 +18,9 @@ import com.esona.webcamcloud.data.EventEnum
 import com.esona.webcamcloud.databinding.ActivityMainBinding
 import com.esona.webcamcloud.service.CamService
 import com.esona.webcamcloud.util.Utils
+import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.EventBus
+import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
@@ -25,6 +28,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private val PERMS = 111
+    private val TAG= MainActivity::class.java.simpleName
 
     override fun attachBaseContext(newBase: Context?) {
         val settings= Utils.loadSettings(newBase!!)
@@ -60,38 +64,22 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
             switchTranslation.setOnCheckedChangeListener { _, b ->
                 Utils.sendStream(b)
             }
-            if(Utils.loadBoolean(this@MainActivity, "serviceStarted")) {
+            if(Utils.loadBoolean(this@MainActivity, "streamStarted")) {
                 switchTranslation.isChecked = true
             }
 
         }
-//        EventBus.getDefault().register(this)
         requestPermissions()
         if(Utils.loadBoolean(this, "settingsStarted")) {
             binding.btnSettings.isSelected = true
-            if(navController.currentDestination?.id== R.id.fragmentMain)
+            if(navController.currentDestination?.id== R.id.fragmentMain) {
+                switchTranslation.visibility= View.GONE
                 navController.navigate(R.id.action_fragmentMain_to_fragmentSettings)
+            }
         }
         else binding.btnCam.isSelected= true
 
-        // todo check whether service is started
-
     }
-
-    override fun onDestroy() {
-//        EventBus.getDefault().unregister(this)
-        super.onDestroy()
-    }
-
-/*
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEvent(event: BaseEvent) {
-        if(event.type== EventEnum.SETTINGS){
-            val settings: Settings = event.bundle.getParcelable("settings")!!
-            binding.textViewCam.text= if(settings.camera== 0) getString(R.string.main) else  getString(R.string.front)
-        }
-    }
-*/
 
     fun showMessage(title: String, text: String, listener: View.OnClickListener? = null){
         val dialog = MessageDialog()
@@ -139,17 +127,27 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+        Log.i(TAG, "---------before connect")
         connect()
     }
 
     private fun connect(){
-        val settings= Utils.loadSettings(this)
         val serviceIntent= Intent(this, CamService::class.java)
-        serviceIntent.putExtra("settings", settings)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent)
         } else {
             startService(serviceIntent)
         }
+        Log.i(TAG, "---------after connect")
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 }

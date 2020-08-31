@@ -1,10 +1,12 @@
 package com.esona.webcamcloud.data
 
+import android.hardware.Camera
 import android.os.Parcel
 import android.os.Parcelable
 
 data class Settings(var resolution: Int= 0, var rate: Int= 15, var login: String= "admin",
-                    var password: String= "password", var port: Int= 1935, var lang: Int= 0, var camera: Int= 0)
+                    var password: String= "password", var port: Int= 1935, var lang: Int= 0,
+                    var camera: Int= 0, var resolutions: List<Camera.Size>?= null)
     : Parcelable {
 
     constructor(parcel: Parcel) : this() {
