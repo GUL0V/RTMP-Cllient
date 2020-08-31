@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Build
+import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.WindowManager
@@ -20,6 +21,7 @@ import com.esona.webcamcloud.data.Settings
 import com.esona.webcamcloud.ui.MainActivity
 import com.esona.webcamcloud.util.Utils
 import com.esona.webcamcloud.util.WifiMonitor
+import com.pedro.rtplibrary.rtsp.RtspCamera1
 import com.pedro.rtsp.utils.ConnectCheckerRtsp
 import com.pedro.rtspserver.RtspServerCamera1
 import org.greenrobot.eventbus.EventBus
@@ -53,7 +55,7 @@ class CamService : Service(), ConnectCheckerRtsp {
         super.onDestroy()
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onEvent(ev: BaseEvent){
         if(ev.type== EventEnum.STREAM){
             streamAllowed= ev.bundle.getBoolean("stream")
@@ -93,6 +95,7 @@ class CamService : Service(), ConnectCheckerRtsp {
             startFore()
             wifimon= WifiMonitor(wifiListener)
             wifimon?.enable(this.applicationContext)
+            getResolutions()
             Log.i(TAG, "service started")
         }
 
@@ -128,6 +131,16 @@ class CamService : Service(), ConnectCheckerRtsp {
         startForeground(0, mBuilder.build())
     }
 
+    private fun getResolutions(){
+        val cam= RtspCamera1(this, null)
+        val resolutions= if(settings.camera== 0) cam.resolutionsBack else cam.resolutionsFront
+        val strResolutions= resolutions.map {
+            "${it.width}x${it.height}"
+        }.toTypedArray()
+        val bundle= Bundle()
+        bundle.putStringArray("resolutions", strResolutions)
+        EventBus.getDefault().postSticky(BaseEvent(EventEnum.RESOLUTION, bundle))
+    }
     private fun stopStream(){
         rtspServerCamera1?.let{
             it.stopStream()

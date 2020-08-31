@@ -3,6 +3,7 @@ package com.esona.webcamcloud.ui
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
@@ -13,13 +14,10 @@ import androidx.navigation.Navigation
 import com.esona.webcamcloud.R
 import com.esona.webcamcloud.data.BaseEvent
 import com.esona.webcamcloud.data.EventEnum
-import com.esona.webcamcloud.data.Settings
 import com.esona.webcamcloud.databinding.ActivityMainBinding
 import com.esona.webcamcloud.service.CamService
 import com.esona.webcamcloud.util.Utils
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import pub.devrel.easypermissions.EasyPermissions
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
@@ -41,13 +39,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
 
         navController= Navigation.findNavController(this, R.id.nav_host_fragment)
         with(binding){
-            if(Utils.loadBoolean(this@MainActivity, "settingsStarted")) {
-                btnSettings.isSelected = true
-                // todo switch to settings fragment
-            }
-            else btnCam.isSelected= true
-            // todo check whether service is started
-
 
             textViewLink.text= Html.fromHtml("<a href=http://webcameracloud.com>webcameracloud.com</a>")
             textViewLink.movementMethod = LinkMovementMethod.getInstance()
@@ -69,9 +60,22 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
             switchTranslation.setOnCheckedChangeListener { _, b ->
                 Utils.sendStream(b)
             }
+            if(Utils.loadBoolean(this@MainActivity, "serviceStarted")) {
+                switchTranslation.isChecked = true
+            }
+
         }
 //        EventBus.getDefault().register(this)
         requestPermissions()
+        if(Utils.loadBoolean(this, "settingsStarted")) {
+            binding.btnSettings.isSelected = true
+            if(navController.currentDestination?.id== R.id.fragmentMain)
+                navController.navigate(R.id.action_fragmentMain_to_fragmentSettings)
+        }
+        else binding.btnCam.isSelected= true
+
+        // todo check whether service is started
+
     }
 
     override fun onDestroy() {
@@ -89,7 +93,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
     }
 */
 
-    fun showMessage(title: String, text: String, listener: View.OnClickListener?= null){
+    fun showMessage(title: String, text: String, listener: View.OnClickListener? = null){
         val dialog = MessageDialog()
         val bundle = Bundle()
         bundle.putString("title", title)
@@ -112,11 +116,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
             Manifest.permission.CAMERA, Manifest.permission.ACCESS_NETWORK_STATE,
             Manifest.permission.ACCESS_WIFI_STATE, Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.RECORD_AUDIO)
+            Manifest.permission.RECORD_AUDIO
+        )
 
         if (EasyPermissions.hasPermissions(this, *perms)) connect()
         else {
-            EasyPermissions.requestPermissions( this, "This app needs permissions for its work", PERMS, *perms)
+            EasyPermissions.requestPermissions(
+                this,
+                "This app needs permissions for its work",
+                PERMS,
+                *perms
+            )
         }
 
     }
@@ -134,8 +144,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
 
     private fun connect(){
         val settings= Utils.loadSettings(this)
-        val service= Intent(this, CamService::class.java)
-        service.putExtra("settings", settings)
-        startService(service)
+        val serviceIntent= Intent(this, CamService::class.java)
+        serviceIntent.putExtra("settings", settings)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
     }
 }

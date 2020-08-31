@@ -35,6 +35,17 @@ object Utils {
         prefs.commit()
     }
 
+    fun storeSet(data: Set<String>, key: String, context: Context){
+        val prefs= context.getSharedPreferences("settings", 0).edit()
+        prefs.putStringSet(key, data)
+        prefs.commit()
+    }
+
+    fun loadSet(key:String, context: Context) : Set<String>? {
+        val prefs= context.getSharedPreferences("settings", 0)
+        return prefs.getStringSet(key, null)
+    }
+
     fun sendSettings(settings: Settings){
         val bundle= Bundle()
         bundle.putParcelable("settings", settings)
@@ -65,12 +76,13 @@ object Utils {
 
     fun loadBoolean(context: Context, key: String) : Boolean {
         val prefs= context.getSharedPreferences("data", 0)
-        return prefs.getBoolean("key", false)
+        return prefs.getBoolean(key, false)
     }
 
     fun storeBoolean(context: Context, key: String, data: Boolean) {
         val prefs= context.getSharedPreferences("data", 0).edit()
         prefs.putBoolean(key, data)
+        prefs.commit()
     }
 
 

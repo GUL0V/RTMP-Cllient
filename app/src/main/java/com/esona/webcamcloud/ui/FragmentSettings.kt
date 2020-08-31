@@ -13,7 +13,7 @@ import com.esona.webcamcloud.data.EventEnum
 import com.esona.webcamcloud.data.Settings
 import com.esona.webcamcloud.databinding.FragmentSettingsBinding
 import com.esona.webcamcloud.util.Utils
-import com.pedro.rtplibrary.rtsp.RtspCamera1
+import kotlinx.android.synthetic.main.fragment_settings.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -35,17 +35,8 @@ class FragmentSettings : Fragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         settings= Utils.loadSettings(requireContext())
-// todo get resolutions from service
-        val cam= RtspCamera1(requireContext(), null)
-        val resolutions= if(settings.camera== 0) cam.resolutionsBack else cam.resolutionsFront
-        val strResolutions= resolutions.map {
-            "${it.width}x${it.height}"
-        }.toTypedArray()
-
-        val checked= settings.resolution.coerceAtMost(strResolutions.size - 1)
 
         with(binding){
-            textViewResolution.text= strResolutions[checked]
             textViewLang.text= if(settings.lang== 0) getString(R.string.eng) else getString(R.string.rus)
             textViewRate.text= "${settings.rate}"
             editTextLogin.setText(settings.login)
@@ -75,19 +66,6 @@ class FragmentSettings : Fragment() {
 
             }
 
-            settings.resolution= checked
-
-            textViewResolution.setOnClickListener{
-                val dialog= AlertDialog.Builder(requireContext())
-                    .setSingleChoiceItems(strResolutions, checked,
-                        DialogInterface.OnClickListener {
-                                di, i ->
-                            settings.resolution= i
-                            textViewResolution.text= strResolutions[i]
-                            di.dismiss()
-                        })
-                dialog.create().show()
-            }
         }
         return binding.root
     }
@@ -95,7 +73,6 @@ class FragmentSettings : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding= null
-        Utils.storeBoolean(requireContext(), "settingsStarted", false)
     }
 
     override fun onResume() {
@@ -136,9 +113,33 @@ class FragmentSettings : Fragment() {
                 )
                 Utils.storeSettings(settingsNew, requireContext())
                 Utils.sendSettings(settingsNew)
+                Utils.storeBoolean(requireContext(), "settingsStarted", false)
             }
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onStickyEvent(event: BaseEvent){
+        if(event.type== EventEnum.RESOLUTION) {
+            val strResolutions= event.bundle.getStringArray("resolutions")
+            val checked= settings.resolution.coerceAtMost(strResolutions!!.size - 1)
+            textViewResolution.text= strResolutions[checked]
+
+            with(binding) {
+                textViewResolution.setOnClickListener{
+                    val dialog= AlertDialog.Builder(requireContext())
+                        .setSingleChoiceItems(strResolutions, checked,
+                            DialogInterface.OnClickListener {
+                                    di, i ->
+                                settings.resolution= i
+                                textViewResolution.text= strResolutions[i]
+                                di.dismiss()
+                            })
+                    dialog.create().show()
+                }
+                settings.resolution= checked
+            }
+        }
+    }
 }
 
