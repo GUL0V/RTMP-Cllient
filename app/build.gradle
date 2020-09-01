@@ -10,6 +10,17 @@ android {
         enabled true
     }
 
+    signingConfigs {
+        signingConfigs {
+            config {
+                keyAlias 'eastwind'
+                keyPassword '123456'
+                storeFile file('/home/vladimir/.keystore')
+                storePassword '123456'
+            }
+        }
+    }
+
     defaultConfig {
         applicationId "com.esona.webcamcloud"
         minSdkVersion 21
@@ -21,8 +32,16 @@ android {
     }
 
     buildTypes {
-        release {
+        debug {
+            signingConfig signingConfigs.config
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            signingConfig signingConfigs.config
+            minifyEnabled false
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

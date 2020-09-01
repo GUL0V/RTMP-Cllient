@@ -28,4 +28,5 @@
     <string name="cancel">Cancel</string>
 	<string name="translation">Translation</string>
 	<string name="err_port">This app cannot use ports below 1024. The default port 1935 is set</string>
+	<string name="save">Save</string>
 </resources>

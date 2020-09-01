@@ -1,5 +1,5 @@
 package com.esona.webcamcloud.data
 
 enum class EventEnum {
-    SETTINGS, STREAM, MAIN, CONNECTION, RESOLUTION
+    SETTINGS, STREAM, CONNECTION, RESOLUTION
 }

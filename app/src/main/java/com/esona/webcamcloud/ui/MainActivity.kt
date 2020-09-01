@@ -10,17 +10,15 @@ import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.esona.webcamcloud.R
-import com.esona.webcamcloud.data.BaseEvent
-import com.esona.webcamcloud.data.EventEnum
 import com.esona.webcamcloud.databinding.ActivityMainBinding
 import com.esona.webcamcloud.service.CamService
 import com.esona.webcamcloud.util.Utils
 import kotlinx.android.synthetic.main.activity_main.*
-import org.greenrobot.eventbus.EventBus
-import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
@@ -37,6 +35,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        supportFragmentManager.registerFragmentLifecycleCallbacks(object :
+            FragmentManager.FragmentLifecycleCallbacks() {
+            override fun onFragmentViewCreated(
+                fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
+                if(f.javaClass.simpleName.contains("FragmentMain")){
+                   binding.btnCam.performClick()
+                }
+            }
+        }, true)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -47,12 +54,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
             textViewLink.text= Html.fromHtml("<a href=http://webcameracloud.com>webcameracloud.com</a>")
             textViewLink.movementMethod = LinkMovementMethod.getInstance()
             btnCam.setOnClickListener{
-                EventBus.getDefault().post(BaseEvent(EventEnum.MAIN))
                 btnCam.isSelected= true
                 btnSettings.isSelected= false
                 if(navController.currentDestination?.id== R.id.fragmentSettings)
                     navController.popBackStack()
                 switchTranslation.visibility= View.VISIBLE
+                Utils.storeBoolean(this@MainActivity, "settingsStarted", false)
             }
             btnSettings.setOnClickListener{
                 btnCam.isSelected= false
@@ -60,6 +67,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
                 if(navController.currentDestination?.id== R.id.fragmentMain)
                     navController.navigate(R.id.action_fragmentMain_to_fragmentSettings)
                 switchTranslation.visibility= View.GONE
+                Utils.storeBoolean(this@MainActivity, "settingsStarted", true)
             }
             switchTranslation.setOnCheckedChangeListener { _, b ->
                 Utils.sendStream(b)
@@ -72,6 +80,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
         requestPermissions()
         if(Utils.loadBoolean(this, "settingsStarted")) {
             binding.btnSettings.isSelected = true
+            binding.btnCam.isSelected= false
             if(navController.currentDestination?.id== R.id.fragmentMain) {
                 switchTranslation.visibility= View.GONE
                 navController.navigate(R.id.action_fragmentMain_to_fragmentSettings)
@@ -92,11 +101,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
 
         }
         dialog.show(supportFragmentManager, "dialog")
-    }
-
-    override fun onBackPressed() {
-        if(navController.currentDestination?.id== R.id.fragmentMain)
-            super.onBackPressed()
     }
 
     private fun requestPermissions() {
@@ -144,7 +148,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String?>,
-        grantResults: IntArray) {
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         // Forward results to EasyPermissions

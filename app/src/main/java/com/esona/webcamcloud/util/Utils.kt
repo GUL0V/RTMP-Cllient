@@ -16,7 +16,7 @@ object Utils {
         res.login= prefs.getString("login", "admin")!!
         res.password= prefs.getString("password", "admin")!!
         res.resolution= prefs.getInt("resolution", 0)
-        res.lang= prefs.getInt("lang", 0)
+        res.lang= prefs.getInt("lang", if(Locale.getDefault().language == "ru") 1 else 0)
         res.port= prefs.getInt("port", 1935)
         res.rate= prefs.getInt("rate", 15)
         res.camera= prefs.getInt("camera", 0)
