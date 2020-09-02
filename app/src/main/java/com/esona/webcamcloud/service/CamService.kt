@@ -70,6 +70,7 @@ class CamService : Service(), ConnectCheckerRtsp {
                 stopStream()
         }
         if(ev.type== EventEnum.SETTINGS){
+            Utils.sendConnString(ip)
             stopStream()
             settings= ev.bundle.getParcelable("settings")!!
             settings.resolutions= getResolutions()
@@ -82,6 +83,7 @@ class CamService : Service(), ConnectCheckerRtsp {
         override fun onChanged(available: Boolean, ip: Int) {
             Log.i(TAG, "wifi enabled = $available, ip= $ip")
             this@CamService.ip = ip
+            Utils.storeInt(this@CamService, "ip", ip)
             Utils.sendConnString(this@CamService.ip)
             if(ip== 0)
                 stopStream()
@@ -94,11 +96,12 @@ class CamService : Service(), ConnectCheckerRtsp {
         settings= Utils.loadSettings(this)
         Log.i(TAG, "settings loaded at start service")
         if (!serviceStarted) {
+            settings.resolutions= getResolutions()
             serviceStarted = true
+            streamAllowed= true
             startForegraund()
             wifimon= WifiMonitor(wifiListener)
             wifimon?.enable(this.applicationContext)
-            settings.resolutions= getResolutions()
             Log.i(TAG, "service started")
         }
 
@@ -157,12 +160,6 @@ class CamService : Service(), ConnectCheckerRtsp {
 
     private fun startStream() {
         if(ip!= 0 && streamAllowed){
-/*
-            val disp =
-                (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
-            val rect = Rect()
-            disp.getRectSize(rect)
-*/
             startCamera()
             Utils.storeBoolean(this, "streamStarted", true)
         }
@@ -182,8 +179,10 @@ class CamService : Service(), ConnectCheckerRtsp {
             var w = 640
             var h = 480
             settings.resolutions?.let{
-                w= it[settings.resolution].width
-                h= it[settings.resolution].height
+                if(settings.resolution>= 0) {
+                    w = it[settings.resolution].width
+                    h = it[settings.resolution].height
+                }
             }
             if (it.isRecording || it.prepareAudio()
                 && it.prepareVideo(w, h, settings.rate, 1024 * 1024, false, rotation)) {

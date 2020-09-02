@@ -61,6 +61,9 @@ class FragmentSettings : Fragment() {
                             textViewLang.text= if(i== 0) getString(R.string.eng) else getString(R.string.rus)
                             Utils.storeSettings(settings, requireContext())
                             di.dismiss()
+                            val lang= if(settings.lang== 0) "en" else "ru"
+                            Utils.applyLang2(requireActivity(), lang)
+
                             activity?.recreate()
                         })
                 dialog.create().show()
@@ -93,8 +96,17 @@ class FragmentSettings : Fragment() {
     fun onStickyEvent(event: BaseEvent){
         if(event.type== EventEnum.RESOLUTION) {
             val strResolutions= event.bundle.getStringArray("resolutions")
-            val checked= settings.resolution.coerceAtMost(strResolutions!!.size - 1)
-            textViewResolution.text= strResolutions[checked]
+            var checked= 0;
+            if(settings.resolution< 0){
+                for(i in strResolutions!!.indices){
+                    if(strResolutions[i].contains("640x480") ||
+                        strResolutions[i].contains("480x640"))
+                        checked= i
+                }
+            }
+            else
+                checked= settings.resolution.coerceAtMost(strResolutions!!.size - 1)
+            textViewResolution.text= strResolutions!![checked]
 
             with(binding) {
                 textViewResolution.setOnClickListener{

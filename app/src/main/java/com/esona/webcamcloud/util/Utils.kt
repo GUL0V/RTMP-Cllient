@@ -1,6 +1,8 @@
 package com.esona.webcamcloud.util
 
 import android.content.Context
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import com.esona.webcamcloud.data.BaseEvent
 import com.esona.webcamcloud.data.EventEnum
@@ -15,7 +17,7 @@ object Utils {
         val res= Settings()
         res.login= prefs.getString("login", "admin")!!
         res.password= prefs.getString("password", "admin")!!
-        res.resolution= prefs.getInt("resolution", 0)
+        res.resolution= prefs.getInt("resolution", -1)
         res.lang= prefs.getInt("lang", if(Locale.getDefault().language == "ru") 1 else 0)
         res.port= prefs.getInt("port", 1935)
         res.rate= prefs.getInt("rate", 15)
@@ -33,6 +35,11 @@ object Utils {
         prefs.putInt("port", data.port)
         prefs.putInt("camera", data.camera)
         prefs.commit()
+    }
+
+    fun keyExists(key: String, context: Context): Boolean{
+        val prefs= context.getSharedPreferences("data", 0)
+        return prefs.contains(key)
     }
 
     fun storeSet(data: Set<String>, key: String, context: Context){
@@ -68,10 +75,19 @@ object Utils {
     fun applyLang(context: Context, lang: String) : Context{
         val locale= Locale(lang)
         val config= context.resources.configuration
-//        val dispMetics= context.resources.displayMetrics
         Locale.setDefault(locale)
         config.setLocale(locale)
         return context.createConfigurationContext(config)
+    }
+
+    fun applyLang2(context: Context, lang: String) {
+        val locale= Locale(lang)
+        val config= Configuration(context.resources.configuration)
+        Locale.setDefault(locale)
+        config.setLocale(locale)
+
+        context.resources.updateConfiguration(config, context.resources.displayMetrics
+        );
     }
 
     fun loadBoolean(context: Context, key: String) : Boolean {
@@ -85,5 +101,15 @@ object Utils {
         prefs.commit()
     }
 
+    fun loadInt(context: Context, key: String) : Int {
+        val prefs= context.getSharedPreferences("data", 0)
+        return prefs.getInt(key, 0)
+    }
+
+    fun storeInt(context: Context, key: String, data: Int) {
+        val prefs= context.getSharedPreferences("data", 0).edit()
+        prefs.putInt(key, data)
+        prefs.commit()
+    }
 
 }

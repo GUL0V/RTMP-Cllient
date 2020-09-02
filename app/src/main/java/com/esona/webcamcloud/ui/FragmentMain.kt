@@ -74,6 +74,7 @@ class FragmentMain : Fragment(){
 
 
     private fun fillConnectionFields(){
+        ip= Utils.loadInt(requireContext(), "ip")
         if(ip!= 0){
             val ipByteArray= BigInteger.valueOf(ip.toLong()).toByteArray()
             val ipAddressString = try {

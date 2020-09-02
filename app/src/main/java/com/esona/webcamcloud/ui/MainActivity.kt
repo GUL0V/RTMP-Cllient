@@ -1,7 +1,6 @@
 package com.esona.webcamcloud.ui
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -28,19 +27,28 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
     private val PERMS = 111
     private val TAG= MainActivity::class.java.simpleName
 
+
+/*
     override fun attachBaseContext(newBase: Context?) {
         val settings= Utils.loadSettings(newBase!!)
         val lang= if(settings.lang== 0) "en" else "ru"
+        Log.i(TAG, "activity locale= $lang")
+//        val context: Context = ContextWrapper.wrap(newBase, Locale(lang))
+//        super.attachBaseContext(context)
         super.attachBaseContext(Utils.applyLang(newBase, lang))
     }
+*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         supportFragmentManager.registerFragmentLifecycleCallbacks(object :
             FragmentManager.FragmentLifecycleCallbacks() {
             override fun onFragmentViewCreated(
-                fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
-                if(f.javaClass.simpleName.contains("FragmentMain")){
-                   binding.btnCam.performClick()
+                fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?
+            ) {
+                if (f.javaClass.simpleName.contains("FragmentMain")) {
+                    binding.btnCam.performClick()
+                } else if (f.javaClass.simpleName.contains("FragmentSettings")) {
+                    binding.switchTranslation.visibility = View.GONE
                 }
             }
         }, true)
@@ -72,9 +80,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
             switchTranslation.setOnCheckedChangeListener { _, b ->
                 Utils.sendStream(b)
             }
-            if(Utils.loadBoolean(this@MainActivity, "streamStarted")) {
-                switchTranslation.isChecked = true
-            }
+
+            switchTranslation.isChecked = !Utils.keyExists("streamStarted", this@MainActivity) ||
+                    Utils.loadBoolean(this@MainActivity, "streamStarted")
+
 
         }
         requestPermissions()

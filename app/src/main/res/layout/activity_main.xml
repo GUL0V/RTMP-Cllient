@@ -81,6 +81,7 @@
 			android:scaleY="1.5"
 			android:textColor="@color/gray_black"
 			app:switchTextAppearance="@style/SwitchText"
+			android:checked="true"
 			/>
 
 	</LinearLayout>
