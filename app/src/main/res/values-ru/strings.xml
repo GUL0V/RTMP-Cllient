@@ -11,7 +11,7 @@
 	<string name="port_title">Порт</string>
 	<string name="rtsp">RTSP:</string>
 	<string name="rtsp_discon">Включите Wi-Fi в настройках телефона</string>
-	<string name="video_resolution">Разрешение видео</string>
+	<string name="video_resolution">Разрешение</string>
 	<string name="frame_rate">Кадров в секунду</string>
 	<string name="login">Логин</string>
 	<string name="password">Пароль</string>
@@ -29,5 +29,5 @@
 	<string name="translation">Трансляция</string>
 	<string name="err_port">Приложение не может использовать порты ниже 1024. Установлен порт по умолчанию 1935</string>
 	<string name="save">Сохранить</string>
-	<string name="url"> http://www.home-security-camera.com</string>
+	<string name="url">"http://www.home-security-camera.com"</string>
 </resources>

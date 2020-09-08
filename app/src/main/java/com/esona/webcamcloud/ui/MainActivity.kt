@@ -52,14 +52,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
                 }
             }
         }, true)
+        Utils.applyLang2(this, "en")
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         navController= Navigation.findNavController(this, R.id.nav_host_fragment)
         with(binding){
-
-            textViewLink.text= Html.fromHtml(String.format("<a href=%s</a>", getString(R.string.url)))
+            val link= getString(R.string.url)
+            val text= link.replaceBefore(".", "")
+            textViewLink.text= Html.fromHtml(String.format("<a href=%s>%s</a>", link, text))
             textViewLink.movementMethod = LinkMovementMethod.getInstance()
             btnCam.setOnClickListener{
                 btnCam.isSelected= true
