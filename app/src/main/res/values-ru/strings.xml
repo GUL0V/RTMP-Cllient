@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name">WebCamCloud</string>
+	<string name="app_name">Free Security Camera</string>
 	<string name="cam">Главная</string>
 	<string name="cam_title">Камера:</string>
 	<string name="settings">Настройки</string>
@@ -29,4 +29,5 @@
 	<string name="translation">Трансляция</string>
 	<string name="err_port">Приложение не может использовать порты ниже 1024. Установлен порт по умолчанию 1935</string>
 	<string name="save">Сохранить</string>
+	<string name="url"> http://www.home-security-camera.com</string>
 </resources>

@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
         navController= Navigation.findNavController(this, R.id.nav_host_fragment)
         with(binding){
 
-            textViewLink.text= Html.fromHtml("<a href=http://webcameracloud.com>webcameracloud.com</a>")
+            textViewLink.text= Html.fromHtml(String.format("<a href=%s</a>", getString(R.string.url)))
             textViewLink.movementMethod = LinkMovementMethod.getInstance()
             btnCam.setOnClickListener{
                 btnCam.isSelected= true

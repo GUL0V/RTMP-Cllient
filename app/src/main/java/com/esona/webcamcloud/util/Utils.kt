@@ -86,8 +86,7 @@ object Utils {
         Locale.setDefault(locale)
         config.setLocale(locale)
 
-        context.resources.updateConfiguration(config, context.resources.displayMetrics
-        );
+        context.resources.updateConfiguration(config, context.resources.displayMetrics)
     }
 
     fun loadBoolean(context: Context, key: String) : Boolean {
