@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
         navController= Navigation.findNavController(this, R.id.nav_host_fragment)
         with(binding){
             val link= getString(R.string.url)
-            val text= link.replaceBefore(".", "")
+            val text= link.replaceBefore(".", "").substring(1)
             textViewLink.text= Html.fromHtml(String.format("<a href=%s>%s</a>", link, text))
             textViewLink.movementMethod = LinkMovementMethod.getInstance()
             btnCam.setOnClickListener{
