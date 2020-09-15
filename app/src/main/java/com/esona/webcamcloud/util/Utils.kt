@@ -20,7 +20,7 @@ object Utils {
         res.resolution= prefs.getInt("resolution", -1)
         res.lang= prefs.getInt("lang", if(Locale.getDefault().language == "ru") 1 else 0)
         res.port= prefs.getInt("port", 1935)
-        res.rate= prefs.getInt("rate", 15)
+        res.rate= prefs.getInt("rate", 30)
         res.camera= prefs.getInt("camera", 0)
         return res
     }
@@ -74,7 +74,7 @@ object Utils {
 
     fun applyLang(context: Context, lang: String) : Context{
         val locale= Locale(lang)
-        val config= context.resources.configuration
+        val config= Configuration(context.resources.configuration)
         Locale.setDefault(locale)
         config.setLocale(locale)
         return context.createConfigurationContext(config)

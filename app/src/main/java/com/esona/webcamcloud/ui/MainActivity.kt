@@ -1,6 +1,7 @@
 package com.esona.webcamcloud.ui
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -16,9 +17,11 @@ import androidx.navigation.Navigation
 import com.esona.webcamcloud.R
 import com.esona.webcamcloud.databinding.ActivityMainBinding
 import com.esona.webcamcloud.service.CamService
+import com.esona.webcamcloud.util.ContextWrapper
 import com.esona.webcamcloud.util.Utils
 import kotlinx.android.synthetic.main.activity_main.*
 import pub.devrel.easypermissions.EasyPermissions
+import java.util.*
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
 
@@ -28,16 +31,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
     private val TAG= MainActivity::class.java.simpleName
 
 
-/*
+
     override fun attachBaseContext(newBase: Context?) {
         val settings= Utils.loadSettings(newBase!!)
         val lang= if(settings.lang== 0) "en" else "ru"
         Log.i(TAG, "activity locale= $lang")
-//        val context: Context = ContextWrapper.wrap(newBase, Locale(lang))
-//        super.attachBaseContext(context)
-        super.attachBaseContext(Utils.applyLang(newBase, lang))
+        val context: Context = ContextWrapper.wrap(newBase, Locale(lang))
+        super.attachBaseContext(context)
+//        super.attachBaseContext(Utils.applyLang(newBase, lang))
     }
-*/
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         supportFragmentManager.registerFragmentLifecycleCallbacks(object :
@@ -52,7 +55,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
                 }
             }
         }, true)
-        Utils.applyLang2(this, "en")
+//        Utils.applyLang2(this, "en")
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

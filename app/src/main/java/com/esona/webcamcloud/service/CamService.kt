@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import androidx.work.*
 import com.esona.webcamcloud.R
 import com.esona.webcamcloud.data.BaseEvent
 import com.esona.webcamcloud.data.EventEnum
@@ -28,6 +29,9 @@ import com.pedro.rtspserver.RtspServerCamera1
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.time.Duration
+import java.time.temporal.TemporalUnit
+import java.util.concurrent.TimeUnit
 
 class CamService : Service(), ConnectCheckerRtsp {
     private var serviceStarted = false
@@ -102,6 +106,9 @@ class CamService : Service(), ConnectCheckerRtsp {
             startForegraund()
             wifimon= WifiMonitor(wifiListener)
             wifimon?.enable(this.applicationContext)
+            val workReq= PeriodicWorkRequest.Builder(MyWorker::class.java, 60, TimeUnit.MINUTES,
+                59, TimeUnit.MINUTES).build()
+            WorkManager.getInstance(this).enqueue(workReq)
             Log.i(TAG, "service started")
         }
 
@@ -226,4 +233,12 @@ class CamService : Service(), ConnectCheckerRtsp {
         Log.i(TAG, "onAuthSuccessRtsp")
     }
 
+    inner class MyWorker(val ctx: Context, val params: WorkerParameters): Worker(ctx, params) {
+
+        override fun doWork(): Result {
+            stopStream()
+            startStream()
+            return Result.success()
+        }
+    }
 }

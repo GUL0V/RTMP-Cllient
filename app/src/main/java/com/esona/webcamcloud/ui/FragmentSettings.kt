@@ -61,8 +61,9 @@ class FragmentSettings : Fragment() {
                             textViewLang.text= if(i== 0) getString(R.string.eng) else getString(R.string.rus)
                             Utils.storeSettings(settings, requireContext())
                             di.dismiss()
-                            val lang= if(settings.lang== 0) "en" else "ru"
-                            Utils.applyLang2(requireActivity(), lang)
+
+//                            val lang= if(settings.lang== 0) "en" else "ru"
+//                            Utils.applyLang2(requireActivity(), lang)
 
                             activity?.recreate()
                         })
