@@ -2,9 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.esona.webcamcloud">
 
-	<uses-feature android:name="android.hardware.camera"/>
-	<uses-feature android:name="android.hardware.camera2.full"/>
-	<uses-feature android:name="android.hardware.camera2.autofocus"/>
+	<uses-feature android:name="android.hardware.camera" android:required="false"/>
+	<uses-feature android:name="android.hardware.camera2.full" android:required="false"/>
+	<uses-feature android:name="android.hardware.camera2.autofocus" android:required="false"/>
+	<uses-feature android:name="android.hardware.location.gps" />
+	<uses-feature android:name="android.hardware.location.network" />
 
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.CAMERA"/>

@@ -25,8 +25,8 @@ android {
         applicationId "com.esona.webcamcloud"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "1.0.4"
         setProperty("archivesBaseName", "security-camera")
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
