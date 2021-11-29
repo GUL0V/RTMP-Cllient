@@ -1,9 +1,11 @@
 package com.esona.webcamcloud.util
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import com.esona.webcamcloud.data.BaseEvent
 import com.esona.webcamcloud.data.EventEnum
 import com.esona.webcamcloud.data.Settings
@@ -17,10 +19,12 @@ object Utils {
         val res= Settings()
         res.login= prefs.getString("login", "admin")!!
         res.password= prefs.getString("password", "admin")!!
-        res.resolution= prefs.getInt("resolution", -1)
+        res.resolutionW= prefs.getInt("resolutionW", -1)
+        res.resolutionH= prefs.getInt("resolutionH", -1)
         res.lang= prefs.getInt("lang", if(Locale.getDefault().language == "ru") 1 else 0)
         res.port= prefs.getInt("port", 1935)
         res.rate= prefs.getInt("rate", 30)
+        res.auto= prefs.getInt("auto", 30)
         res.camera= prefs.getInt("camera", 0)
         return res
     }
@@ -29,8 +33,10 @@ object Utils {
         val prefs= context.getSharedPreferences("settings", 0).edit()
         prefs.putString("login", data.login)
         prefs.putString("password", data.password)
-        prefs.putInt("resolution", data.resolution)
+        prefs.putInt("resolutionW", data.resolutionW)
+        prefs.putInt("resolutionH", data.resolutionH)
         prefs.putInt("rate", data.rate)
+        prefs.putInt("auto", data.auto)
         prefs.putInt("lang", data.lang)
         prefs.putInt("port", data.port)
         prefs.putInt("camera", data.camera)
@@ -63,6 +69,7 @@ object Utils {
     fun sendStream(stream: Boolean){
         val b= Bundle()
         b.putBoolean("stream", stream)
+        Log.d("marjona", "sendStream: "+stream)
         EventBus.getDefault().post(BaseEvent(EventEnum.STREAM, b))
     }
 

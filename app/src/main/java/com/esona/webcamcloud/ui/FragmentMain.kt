@@ -1,5 +1,9 @@
 package com.esona.webcamcloud.ui
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -8,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -23,6 +28,14 @@ import org.greenrobot.eventbus.ThreadMode
 import java.math.BigInteger
 import java.net.InetAddress
 import java.net.UnknownHostException
+import android.content.Context.CLIPBOARD_SERVICE
+import android.content.Intent
+import android.widget.Toast
+
+import androidx.core.content.ContextCompat.getSystemService
+
+
+
 
 
 class FragmentMain : Fragment(){
@@ -33,7 +46,7 @@ class FragmentMain : Fragment(){
     private lateinit var navController: NavController
     private lateinit var mHandler: Handler
     lateinit var settings: Settings
-
+    private var qrImage : Bitmap? = null
     private val TAG= FragmentMain::class.java.simpleName
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -44,6 +57,7 @@ class FragmentMain : Fragment(){
         }
     }
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         navController= Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
@@ -52,14 +66,23 @@ class FragmentMain : Fragment(){
         settings= Utils.loadSettings(requireContext())
 
         with(binding){
-            textViewWifiPort.text= String.format(getString(R.string.port), settings.port)
             fillConnectionFields()
             switchCamera.isChecked= settings.camera==1
 
-            switchCamera.setOnCheckedChangeListener { _, b ->
-                settings.camera= if(b) 1 else 0
-                Utils.storeSettings(settings, requireContext())
-                Utils.sendSettings(settings)
+
+                switchCamera.setOnCheckedChangeListener { _, b ->
+                    if(Utils.loadBoolean(requireContext(), "streamStarted")){
+                        Toast.makeText(requireContext(), R.string.Change_cam,Toast.LENGTH_SHORT).show()
+                        switchCamera.isChecked = !b
+                    }
+                    else{
+                        settings.camera= if(b) 1 else 0
+                        Utils.storeSettings(settings, requireContext())
+                        Utils.sendSettings(settings)
+
+                    }
+
+
             }
         }
         EventBus.getDefault().register(this)
@@ -72,6 +95,10 @@ class FragmentMain : Fragment(){
         _binding= null
     }
 
+    override fun onResume() {
+        Log.d(TAG, "onResume: ")
+        super.onResume()
+    }
 
     private fun fillConnectionFields(){
         ip= Utils.loadInt(requireContext(), "ip")
@@ -84,20 +111,30 @@ class FragmentMain : Fragment(){
                 null
             }
             with(binding){
-                textViewRtspStatus.text= "rtsp://${settings.login}:${settings.password}@${ipAddressString}:${settings.port}"
+                textViewRtspStatus.text= if(Utils.loadBoolean(requireContext(), "settingsStarted")) "Stream started"; else "Stream not working"
                 textViewWifiStatus.text= String.format(getString(R.string.ip_title), ipAddressString)
                 textViewWifi.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(requireContext(), R.drawable.ic_wifi_24px),
                     null, null, null)
+
+                qrImage = net.glxn.qrgen.android.QRCode.from("rtsp://${settings.login}:${settings.password}@${ipAddressString}:${settings.port}").bitmap()
+                if(qrImage != null)
+                {
+                    smile.setImageBitmap(qrImage)
+                }
+
             }
         }
         else{
             with(binding){
-                textViewRtspStatus.text= getString(R.string.rtsp_discon)
+                textViewRtspStatus.text= if(Utils.loadBoolean(requireContext(), "settingsStarted")) "Stream started"; else "Stream not working"
                 textViewWifiStatus.text= String.format(getString(R.string.ip_title), getString(R.string.ip_none))
                 textViewWifi.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(requireContext(), R.drawable.ic_wifi_off_24px),
                     null, null, null)
+                smile.setImageBitmap(null)
+
             }
         }
     }
+
 
 }

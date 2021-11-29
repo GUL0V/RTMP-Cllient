@@ -1,10 +1,13 @@
 package com.esona.webcamcloud.ui
 
 import android.Manifest
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.util.Log
@@ -23,13 +26,40 @@ import kotlinx.android.synthetic.main.activity_main.*
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
 
-class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
+class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks, FragmentSettings.OnFragmentCallbacks  {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private val PERMS = 111
     private val TAG= MainActivity::class.java.simpleName
+    var timer:CountDownTimer? = null;
 
+
+    override fun changeImage(resourceId: Int) {
+        with(binding){
+            if(switchTranslation.isChecked){
+                Utils.sendStream(false)
+                switchTranslation.isChecked = false;
+                timer?.cancel()
+                Thread.sleep(1000)
+                }
+            else{
+                switchTranslation.isChecked = false;
+                timer?.cancel()
+            }
+        }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d(TAG, "onRestart: ")
+
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
 
 
     override fun attachBaseContext(newBase: Context?) {
@@ -41,7 +71,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
 //        super.attachBaseContext(Utils.applyLang(newBase, lang))
     }
 
-
+    var isible:Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         supportFragmentManager.registerFragmentLifecycleCallbacks(object :
             FragmentManager.FragmentLifecycleCallbacks() {
@@ -49,9 +79,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
                 fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?
             ) {
                 if (f.javaClass.simpleName.contains("FragmentMain")) {
-                    binding.btnCam.performClick()
+                    binding.home.performClick()
                 } else if (f.javaClass.simpleName.contains("FragmentSettings")) {
-                    binding.switchTranslation.visibility = View.GONE
+                    binding.layoutTop.visibility = View.GONE
                 }
             }
         }, true)
@@ -62,45 +92,68 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
 
         navController= Navigation.findNavController(this, R.id.nav_host_fragment)
         with(binding){
+
             val link= getString(R.string.url)
             val text= link.replaceBefore(".", "").substring(1)
             textViewLink.text= Html.fromHtml(String.format("<a href=%s>%s</a>", link, text))
             textViewLink.movementMethod = LinkMovementMethod.getInstance()
-            btnCam.setOnClickListener{
-                btnCam.isSelected= true
-                btnSettings.isSelected= false
+            textViewLink.setLinkTextColor(Color.WHITE)
+            home.setOnClickListener{
+                home.isSelected= true
+                settings.isSelected= false
                 if(navController.currentDestination?.id== R.id.fragmentSettings)
                     navController.popBackStack()
-                switchTranslation.visibility= View.VISIBLE
+                layoutTop.visibility= View.VISIBLE
                 Utils.storeBoolean(this@MainActivity, "settingsStarted", false)
             }
-            btnSettings.setOnClickListener{
-                btnCam.isSelected= false
-                btnSettings.isSelected= true
+            settings.setOnClickListener{
+                home.isSelected= false
+                settings.isSelected= true
                 if(navController.currentDestination?.id== R.id.fragmentMain)
                     navController.navigate(R.id.action_fragmentMain_to_fragmentSettings)
-                switchTranslation.visibility= View.GONE
+                layoutTop.visibility= View.GONE
                 Utils.storeBoolean(this@MainActivity, "settingsStarted", true)
             }
-            switchTranslation.setOnCheckedChangeListener { _, b ->
-                Utils.sendStream(b)
+            switchTranslation.setOnCheckedChangeListener { _, isChecked ->
+                if (!Utils.loadBoolean(this@MainActivity, "streamStarted") && isChecked) {
+
+                    //textViewRtspStatus.text = "Stream started"
+                    //textViewRtspStatus.setTextColor(Color.parseColor("#4CAF50"))
+                    Utils.sendStream(true)
+                    //switchTranslation.isChecked = true
+                    connect()
+                    Utils.storeBoolean(this@MainActivity, "settingsStarted", true)
+                    Log.d("TAGsend", "onCreate: "+Utils.loadBoolean(this@MainActivity, "streamStarted"))
+
+                } else {
+                    //textViewRtspStatus.text = "Stream not working"
+                    //textViewRtspStatus.setTextColor(Color.parseColor("#F44336"))
+                    Utils.sendStream(false)
+                    disconnect()
+                    //switchTranslation.isChecked = false
+                    Utils.storeBoolean(this@MainActivity, "settingsStarted", false)
+                    Log.d("TAGsend", "onCreate: "+Utils.loadBoolean(this@MainActivity, "streamStarted"))
+                }
             }
 
-            switchTranslation.isChecked = !Utils.keyExists("streamStarted", this@MainActivity) ||
-                    Utils.loadBoolean(this@MainActivity, "streamStarted")
+
+            Utils.storeBoolean(this@MainActivity, "settingsStarted", true)
+
+
+            Log.d("TAGcheckstart", "onCreate:${Utils.keyExists("streamStarted", this@MainActivity)} ${Utils.loadBoolean(this@MainActivity, "streamStarted")}")
 
 
         }
         requestPermissions()
         if(Utils.loadBoolean(this, "settingsStarted")) {
-            binding.btnSettings.isSelected = true
-            binding.btnCam.isSelected= false
+            binding.settings.isSelected = true
+            binding.home.isSelected= false
             if(navController.currentDestination?.id== R.id.fragmentMain) {
-                switchTranslation.visibility= View.GONE
+                //switchTranslation.visibility= View.GONE
                 navController.navigate(R.id.action_fragmentMain_to_fragmentSettings)
             }
         }
-        else binding.btnCam.isSelected= true
+        else binding.home.isSelected= true
 
     }
 
@@ -150,12 +203,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
     }
 
     private fun connect(){
+        CamService.init(this)
         val serviceIntent= Intent(this, CamService::class.java)
+        serviceIntent.putExtra(
+            "endpoint",
+            "rtmp://media.videosurveillance.cloud:1935/live/10_d67d8ab4f4c10bf22aa353e27879133c?psk=secretPassword"
+        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent)
         } else {
             startService(serviceIntent)
         }
+        Log.i(TAG, "---------after connect")
+    }
+    private fun disconnect(){
+        stopService(Intent(applicationContext, CamService::class.java))
         Log.i(TAG, "---------after connect")
     }
 
@@ -168,5 +230,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks  {
 
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
+
+    @Suppress("DEPRECATION")
+    private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
     }
 }

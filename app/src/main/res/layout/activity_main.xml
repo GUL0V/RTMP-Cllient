@@ -3,110 +3,203 @@
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
+	android:background="#FFFFFF"
+	android:animateLayoutChanges="true"
 	android:layout_height="match_parent"
 	tools:context=".ui.MainActivity">
-	<LinearLayout
+
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/layoutTop"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:background="#FFFFFF"
 		android:orientation="horizontal"
-		app:layout_constraintTop_toTopOf="parent"
-		android:id="@+id/layoutTop"
 		android:paddingTop="8dp"
 		android:paddingBottom="8dp"
-		android:background="@color/colorPrimary"
-		>
-		<LinearLayout
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:orientation="vertical"
-			android:layout_marginLeft="24dp"
-			android:id="@+id/btnCam"
-			>
-			<ImageView
-				android:layout_width="wrap_content"
-				android:layout_height="32dp"
-				android:src="@drawable/cam"
-				android:adjustViewBounds="true"
-				android:duplicateParentState="true"
-				android:layout_gravity="center"
-				/>
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/cam"
-				android:duplicateParentState="true"
-				android:textColor="@color/selector_tab_text"
-				android:id="@+id/textViewCam"
-				/>
-		</LinearLayout>
-		<LinearLayout
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:orientation="vertical"
-			android:layout_marginLeft="24dp"
-			android:id="@+id/btnSettings"
-			>
-			<ImageView
-				android:layout_width="wrap_content"
-				android:layout_height="32dp"
-				android:src="@drawable/settings"
-				android:adjustViewBounds="true"
-				android:duplicateParentState="true"
-				android:layout_gravity="center"
-				/>
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/settings"
-				android:duplicateParentState="true"
-				android:textColor="@color/selector_tab_text"
-				/>
-		</LinearLayout>
-		<Space
+		app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+		<TextView
+			android:id="@+id/textView"
 			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="1"
-			/>
-		<androidx.appcompat.widget.SwitchCompat
-			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_marginStart="24dp"
+			android:text="@string/urls"
+			android:textColor="#1c1c1c"
+			android:textSize="19dp"
+			android:textStyle="bold"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/switchTranslation"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent" />
+
+
+		<androidx.appcompat.widget.SwitchCompat
 			android:id="@+id/switchTranslation"
-			android:switchMinWidth="56dp"
+			android:layout_width="wrap_content"
+			android:minWidth="60dp"
+			android:minHeight="40dp"
+			android:layout_height="wrap_content"
 			android:layout_gravity="center_vertical"
-			android:layout_marginRight="24dp"
-			android:textOff="@string/off"
-			android:textOn="@string/on"
-			app:showText="true"
+			android:checked="true"
 			android:scaleX="1.5"
 			android:scaleY="1.5"
+			android:layout_marginEnd="24dp"
+			android:layout_marginTop="8dp"
+			android:layout_marginBottom="8dp"
+			android:switchMinWidth="56dp"
 			android:textColor="@color/gray_black"
-			app:switchTextAppearance="@style/SwitchText"
-			android:checked="true"
-			/>
+			android:textOff="@string/off"
+			android:textOn="@string/on"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:showText="true"
+			app:switchTextAppearance="@style/SwitchText" />
 
-	</LinearLayout>
+	</androidx.constraintlayout.widget.ConstraintLayout>
+	<androidx.appcompat.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="60dp"
+		android:background="#1F7EBE"
+		android:elevation="0dp"
+		android:title="@string/app_name"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:titleMarginStart="10dp"
+		app:titleMarginTop="0dp"
+		app:titleTextColor="@color/colorPrimary">
+
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:id="@+id/home"
+				android:layout_width="wrap_content"
+				android:background="@drawable/ripple"
+				android:clickable="true"
+				android:minWidth="60dp"
+				android:focusable="true"
+				android:layout_height="match_parent"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent">
+
+				<ImageView
+					android:id="@+id/home13"
+					android:layout_width="35dp"
+					android:layout_marginTop="4dp"
+					android:layout_height="35dp"
+					android:layout_gravity="end"
+					android:contentDescription="Toolbar icon"
+					android:src="@drawable/home_icon3"
+					android:visibility="visible"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent"
+					app:tint="#FFFFFF" />
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/cam"
+					android:textColor="#FFFFFF"
+					android:textSize="15dp"
+					android:textStyle="bold"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@+id/home13" />
+
+
+			</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+			<androidx.constraintlayout.widget.ConstraintLayout
+				android:id="@+id/settings"
+				android:layout_width="wrap_content"
+				android:background="@drawable/ripple"
+				android:minWidth="60dp"
+				android:clickable="true"
+				android:layout_marginEnd="16dp"
+				android:focusable="true"
+				android:layout_height="match_parent"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toTopOf="parent">
+
+				<ImageView
+					android:id="@+id/home14"
+					android:layout_width="35dp"
+					android:layout_height="35dp"
+					android:layout_marginTop="4dp"
+					android:layout_gravity="end"
+					android:contentDescription="Toolbar icon"
+					android:src="@drawable/ic_baseline_settings_24"
+					android:visibility="visible"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent"
+					app:tint="#FFFFFF" />
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/settings"
+					android:textColor="#FFFFFF"
+					android:textSize="15dp"
+					android:textStyle="bold"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@+id/home14" />
+
+
+			</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+		</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+	</androidx.appcompat.widget.Toolbar>
+
 	<fragment
 		android:id="@+id/nav_host_fragment"
 		android:name="androidx.navigation.fragment.NavHostFragment"
 		android:layout_width="0dp"
 		android:layout_height="0dp"
 		app:defaultNavHost="true"
-		app:navGraph="@navigation/main_graph"
-		app:layout_constraintTop_toBottomOf="@+id/layoutTop"
-		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintBottom_toTopOf="@+id/bottom"
 		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintBottom_toTopOf="@+id/textViewLink"
-		android:layout_marginTop="4dp"
-		/>
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/layoutTop"
+		app:navGraph="@navigation/main_graph" />
 
-	<TextView
-		android:layout_width="match_parent"
-		android:layout_height="40dp"
-		android:textAllCaps="true"
+
+	<RelativeLayout
+		android:id="@+id/bottom"
+		android:layout_width="0dp"
+		android:layout_height="50dp"
+		android:background="#1F7EBE"
 		app:layout_constraintBottom_toBottomOf="parent"
-		android:id="@+id/textViewLink"
-		android:gravity="center"
-		android:background="@color/colorPrimary"
-		/>
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent">
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/textViewLink"
+			android:layout_centerInParent="true"
+			android:text="http://home-security-camera.com"
+			android:textColor="#FFFFFF"
+			android:textSize="22dp"
+			android:textStyle="bold" />
+
+	</RelativeLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

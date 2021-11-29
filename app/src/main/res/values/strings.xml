@@ -13,6 +13,7 @@
 	<string name="rtsp_discon">Enable Wi-Fi in mobile phone settings</string>
 	<string name="video_resolution">Video resolution</string>
 	<string name="frame_rate">Frame rate</string>
+	<string name="restart_every_minutes">Restart Every (min)</string>
 	<string name="login">Login</string>
 	<string name="password">Password</string>
 	<string name="lang">Language</string>
@@ -30,4 +31,10 @@
 	<string name="err_port">This app cannot use ports below 1024. The default port 1935 is set</string>
 	<string name="save">Save</string>
 	<string name="url">"http://www.home-security-camera.com"</string>
+	<string name="urls">Use phone as an IP camera</string>
+	<string name="copy">Copy</string>
+	<string name="send">Send</string>
+	<string name="clipboard">Copied to Clipboard</string>
+	<string name="Change_cam">For changing camera, stop streaming</string>
+
 </resources>

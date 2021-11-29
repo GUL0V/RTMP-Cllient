@@ -9,24 +9,24 @@ android {
     viewBinding {
         enabled true
     }
-
+/*
     signingConfigs {
         signingConfigs {
             config {
                 keyAlias 'eastwind'
                 keyPassword '123456'
-                storeFile file('/home/vladimir/.keystore')
+                storeFile file('/home/keystore.jks')
                 storePassword '123456'
             }
         }
     }
-
+*/
     defaultConfig {
         applicationId "com.esona.webcamcloud"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 4
-        versionName "1.0.4"
+        versionCode 5
+        versionName "2.0.4"
         setProperty("archivesBaseName", "security-camera")
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -42,13 +42,13 @@ android {
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.config
+  //          signingConfig signingConfigs.config
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
         release {
-            signingConfig signingConfigs.config
+    //        signingConfig signingConfigs.config
             minifyEnabled false
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -66,14 +66,14 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.3.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     implementation "androidx.work:work-runtime-ktx:2.4.0"
-    implementation 'com.github.pedroSG94.rtmp-rtsp-stream-client-java:rtplibrary:1.8.3'
+    implementation 'com.github.pedroSG94.rtmp-rtsp-stream-client-java:rtplibrary:2.1.2'
     implementation 'org.greenrobot:eventbus:3.1.1'
 
     implementation "androidx.navigation:navigation-fragment-ktx:2.3.0"
     implementation "androidx.navigation:navigation-ui-ktx:2.3.0"
     implementation "androidx.navigation:navigation-dynamic-features-fragment:2.3.0"
     implementation 'pub.devrel:easypermissions:3.0.0'
-
+    implementation 'com.github.kenglxn.qrgen:android:2.6.0'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

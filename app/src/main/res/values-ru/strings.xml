@@ -16,6 +16,7 @@
 	<string name="login">Логин</string>
 	<string name="password">Пароль</string>
 	<string name="lang">Язык</string>
+	<string name="restart_every_minutes">Авто перезапуск трансляции (мин)</string>
 	<string name="eng">Английский</string>
 	<string name="rus">Русский</string>
 	<string name="compress">h264 compression</string>
@@ -30,4 +31,10 @@
 	<string name="err_port">Приложение не может использовать порты ниже 1024. Установлен порт по умолчанию 1935</string>
 	<string name="save">Сохранить</string>
 	<string name="url">"http://www.home-security-camera.com"</string>
+	<string name="urls">Используйте телефон как IP камеру</string>
+	<string name="copy">Копировать</string>
+	<string name="send">Отправить</string>
+	<string name="clipboard">Скопировано в буфер обмена</string>
+	<string name="Change_cam">Для смены камеры, выключите стрим</string>
+
 </resources>
